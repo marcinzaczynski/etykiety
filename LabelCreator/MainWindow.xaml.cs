@@ -20,72 +20,22 @@ namespace LabelCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Point clickPosition;
+        // Współrzędne przesówanego komponentu
+        double FirstXPos, FirstYPos;
 
-        private bool isDragging;
+        // współrzędne kursora myszki
+        double FirstArrowXPos, FirstArrowYPos;
 
-        double FirstXPos, FirstYPos, FirstArrowXPos, FirstArrowYPos;
+        // Przeciągany element na Canvasie
         object MovingObject;
-        //Line Path1, Path2, Path3, Path4;
-        //Rectangle FirstPosition, CurrentPosition;
+
 
         public MainWindow()
         {
             InitializeComponent();
 
-            //foreach (Control control in DesigningCanvas.Children)
-            //{
-            //    control.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
-            //    control.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
-            //    control.Cursor = Cursors.Hand;
-            //}
-
-            //// Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
+            // Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
             this.PreviewMouseMove += this.MouseMove;
-
-            //// Setting up the Lines that we want to show the path of movement
-            //List<Double> Dots = new List<double>();
-            //Dots.Add(1);
-            //Dots.Add(2);
-            //Path1 = new Line();
-            //Path1.Width = DesigningCanvas.Width;
-            //Path1.Height = DesigningCanvas.Height;
-            //Path1.Stroke = Brushes.DarkGray;
-            //Path1.StrokeDashArray = new DoubleCollection(Dots);
-
-            //Path2 = new Line();
-            //Path2.Width = DesigningCanvas.Width;
-            //Path2.Height = DesigningCanvas.Height;
-            //Path2.Stroke = Brushes.DarkGray;
-            //Path2.StrokeDashArray = new DoubleCollection(Dots);
-
-            //Path3 = new Line();
-            //Path3.Width = DesigningCanvas.Width;
-            //Path3.Height = DesigningCanvas.Height;
-            //Path3.Stroke = Brushes.DarkGray;
-            //Path3.StrokeDashArray = new DoubleCollection(Dots);
-
-            //Path4 = new Line();
-            //Path4.Width = DesigningCanvas.Width;
-            //Path4.Height = DesigningCanvas.Height;
-            //Path4.Stroke = Brushes.DarkGray;
-            //Path4.StrokeDashArray = new DoubleCollection(Dots);
-
-            //FirstPosition = new Rectangle();
-            //FirstPosition.Stroke = Brushes.DarkGray;
-            //FirstPosition.StrokeDashArray = new DoubleCollection(Dots);
-
-            //CurrentPosition = new Rectangle();
-            //CurrentPosition.Stroke = Brushes.DarkGray;
-            //CurrentPosition.StrokeDashArray = new DoubleCollection(Dots);
-
-            //// Adding Lines to main designing panel(Canvas)
-            //DesigningCanvas.Children.Add(Path1);
-            //DesigningCanvas.Children.Add(Path2);
-            //DesigningCanvas.Children.Add(Path3);
-            //DesigningCanvas.Children.Add(Path4);
-            //DesigningCanvas.Children.Add(FirstPosition);
-            //DesigningCanvas.Children.Add(CurrentPosition);
         }
 
         private void Label_MouseEnter(object sender, MouseEventArgs e)
@@ -114,13 +64,14 @@ namespace LabelCreator
             lbl.Cursor = Cursors.Hand;
         }
 
-        private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            //isDragging = true;
-            //var draggableControl = sender as Control;
-            //clickPosition = e.GetPosition(this);
-            //draggableControl.CaptureMouse();
 
+        private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
 
             //In this event, we get current mouse position on the control to use it in the MouseMove event.
             FirstXPos = e.GetPosition(sender as Control).X;
@@ -131,21 +82,33 @@ namespace LabelCreator
         }
 
 
-        void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void DesigningCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //isDragging = false;
-            //var draggable = sender as Control;
-            //draggable.ReleaseMouseCapture();
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                if (e.Delta > 0)
+                {
+                    SliderCanvasZoom.Value += 0.2;
+                }
+                else
+                {
+                    SliderCanvasZoom.Value -= 0.2;
+                }
+            }
+        }
 
-            // In this event, we should set the lines visibility to Hidden
+        private void SliderCanvasZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var newVal = e.NewValue;
+
+            CanvasScaleTransform.ScaleX = newVal;
+            CanvasScaleTransform.ScaleY = newVal;
+
+        }
+
+        private new void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
             MovingObject = null;
-
-            //Path1.Visibility = System.Windows.Visibility.Hidden;
-            //Path2.Visibility = System.Windows.Visibility.Hidden;
-            //Path3.Visibility = System.Windows.Visibility.Hidden;
-            //Path4.Visibility = System.Windows.Visibility.Hidden;
-            //FirstPosition.Visibility = System.Windows.Visibility.Hidden;
-            //CurrentPosition.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private new void MouseMove(object sender, MouseEventArgs e)
@@ -153,7 +116,7 @@ namespace LabelCreator
             // JEŚLI WCIŚNIĘTY LEWY PRZYCISK MYSZY NA JAKIMŚ KOMPONENCIE
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if(MovingObject is FrameworkElement tempMovingObject)
+                if (MovingObject is FrameworkElement tempMovingObject)
                 {
                     var xNewPosition = e.GetPosition((tempMovingObject).Parent as FrameworkElement).X - FirstXPos;
                     var yNewPosition = e.GetPosition((tempMovingObject).Parent as FrameworkElement).Y - FirstYPos;
@@ -163,14 +126,14 @@ namespace LabelCreator
                         (MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty, xNewPosition);
                     }
 
-                    if (yNewPosition > 0 && yNewPosition + tempMovingObject.ActualHeight < DesigningCanvas.ActualHeight )
+                    if (yNewPosition > 0 && yNewPosition + tempMovingObject.ActualHeight < DesigningCanvas.ActualHeight)
                     {
                         (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty, yNewPosition);
                     }
-                }                
+                }
             }
         }
 
-        
+
     }
 }

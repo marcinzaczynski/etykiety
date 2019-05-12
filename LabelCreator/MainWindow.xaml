@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LabelCreator"
+        xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         mc:Ignorable="d"
         Title="MainWindow"
         Width="700" 
@@ -12,12 +13,17 @@
         MinHeight="200"
         >
     
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.NewCanvas" Executed="Command_NewCanvas"></CommandBinding>
+    </Window.CommandBindings>    
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>  <!--Menu Plik-->
+            <RowDefinition Height="22"/>    <!--Pasek Toolbox-->
+            <RowDefinition Height="*"/>     <!--Kontent-->
+            <RowDefinition Height="48"/>    <!--Canvas zoom-->
+            <RowDefinition Height="auto"/>  <!--Status bar-->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -30,6 +36,9 @@
                 <MenuItem Header="Zapisz"></MenuItem>
                 <MenuItem Header="Otwórz"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Program">
+                <MenuItem Header="Nowa etykieta" Command="" ></MenuItem>                
+            </MenuItem>
         </Menu>
 
         <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Padding="0" Background="#FFF3F3F3">
@@ -38,39 +47,29 @@
             <Button Height="20" Click="Button_Click">Kod kreskowy</Button>
         </ToolBar>
 
-        <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
             <GroupBox  Header="Komponenty">
                 <ListBox BorderBrush="{x:Null}">
                     
                 </ListBox>
             </GroupBox>
         </ScrollViewer>
-        
 
-        <GroupBox Grid.Row="2" Grid.Column="1" Header="Obszar roboczy">
-        
-            <Canvas Background="#FFEBEBEB" Name="DesigningCanvas" Height="250" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <!--<TextBox Text="It's a TextBox control" Canvas.Left="50" Canvas.Top="30" Width="177" />
-                <Label Content="It's a Label control" Canvas.Left="422" Width="110" Canvas.Top="25" BorderBrush="#FFAC0000" BorderThickness="1" MouseEnter="Label_MouseEnter" />
-                <Button Content="It's a Button control" Canvas.Left="50" Canvas.Top="60"/>
-                <RadioButton Canvas.Left="50" Canvas.Top="90" Height="30" Name="radioButton1">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="It's a Custom RadioButton Control with CheckBox control"/>
-                            <CheckBox Margin="7"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-                <CheckBox Canvas.Left="50" Canvas.Top="120
-                          " Content="It's a CheckBox control" Height="16" Name="checkBox1" />
-                <ListBox Canvas.Left="189" Canvas.Top="146" Height="100" Name="listBox1" Width="151">
-                    <ListBoxItem Content="It's a ListBox control" />
-                </ListBox>-->
-            </Canvas>
+        <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <GroupBox Header="Obszar roboczy">
+                <Canvas Background="#FFEBEBEB" Name="DesigningCanvas" Height="250" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel">
+                    <Canvas.LayoutTransform>
+                        <ScaleTransform x:Name="CanvasScaleTransform"/>
+                    </Canvas.LayoutTransform>
+                </Canvas>
+            </GroupBox>
+        </ScrollViewer>
 
+        <GroupBox Grid.Row="3" Grid.Column="1" Header="Zoom">
+            <Slider Name="SliderCanvasZoom" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderCanvasZoom_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"></Slider>
         </GroupBox>
+        
 
-
-        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Status bar</StatusBar>
+        <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Status bar</StatusBar>
     </Grid>
 </Window>
