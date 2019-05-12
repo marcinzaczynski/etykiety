@@ -9,7 +9,7 @@
         Title="MainWindow"
         Width="700" 
         MinWidth="300"
-        Height="400"
+        Height="450"
         MinHeight="200"
         >
     
@@ -33,11 +33,11 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="Plik">
-                <MenuItem Header="Zapisz"></MenuItem>
-                <MenuItem Header="Otwórz"></MenuItem>
+                <MenuItem Header="Zapisz" Command="helpers:CommandHandler.FileSave"></MenuItem>
+                <MenuItem Header="Otwórz" Command="helpers:CommandHandler.FileOpen"></MenuItem>
             </MenuItem>
             <MenuItem Header="Program">
-                <MenuItem Header="Nowa etykieta" Command="" ></MenuItem>                
+                <MenuItem Header="Nowa etykieta" Command="helpers:CommandHandler.NewCanvas"></MenuItem>                
             </MenuItem>
         </Menu>
 
@@ -55,9 +55,9 @@
             </GroupBox>
         </ScrollViewer>
 
-        <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <GroupBox Header="Obszar roboczy">
-                <Canvas Background="#FFEBEBEB" Name="DesigningCanvas" Height="250" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel">
+        <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
+            <GroupBox Header="Obszar roboczy" >
+                <Canvas Name="DesigningCanvas" Height="250" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" >
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform"/>
                     </Canvas.LayoutTransform>

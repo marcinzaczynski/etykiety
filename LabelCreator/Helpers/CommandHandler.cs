@@ -9,10 +9,31 @@ namespace LabelCreator.Helpers
 {
     public static class CommandHandler
     {
+        public static readonly RoutedUICommand FileSave = new RoutedUICommand
+            (
+                "FileSave",
+                "FileSave",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.S ,ModifierKeys.Control)
+                }
+            );
+        public static readonly RoutedUICommand FileOpen = new RoutedUICommand
+            (
+                "FileOpen",
+                "FileOpen",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.O ,ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand NewCanvas = new RoutedUICommand
             (
-                "GenerateCodes",
-                "GenerateCodes",
+                "NewCanvas",
+                "NewCanvas",
                 typeof(CommandHandler),
                 new InputGestureCollection()
                 {

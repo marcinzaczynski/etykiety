@@ -67,7 +67,16 @@ namespace LabelCreator
 
         private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
         {
+            NewCanvasWindow cnw = new NewCanvasWindow();
 
+            cnw.ShowDialog();
+
+            // Drukowanie Canvas
+            //var dialog = new PrintDialog();
+            //if (dialog.ShowDialog() == true)
+            //{
+            //    dialog.PrintVisual(DesigningCanvas, "Printing canvas");
+            //}
         }
 
         private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

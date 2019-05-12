@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LabelCreator"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" Height="450" Width="800">
+        Title="NewCanvasWindow" Height="200" Width="400">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         
+        <ListBox Grid.Row="0" Grid.Column="0" Name="ListBoxPrinters">
+            
+        </ListBox>
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Szerokość:"/>
+                <TextBox Width="120" Text="{Binding Value, StringFormat='{}{0:#0.00}'}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Wysokość:"/>
+                <TextBox Width="120"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
