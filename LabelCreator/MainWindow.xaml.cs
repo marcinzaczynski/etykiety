@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LabelCreator.ViewModel;
 
 namespace LabelCreator
 {
@@ -70,6 +71,10 @@ namespace LabelCreator
             NewCanvasWindow cnw = new NewCanvasWindow();
 
             cnw.ShowDialog();
+            var vm = cnw.DataContext as NewCanvasViewModel;
+
+            var w = vm.Width;
+            var h = vm.Height;
 
             // Drukowanie Canvas
             //var dialog = new PrintDialog();
