@@ -16,9 +16,10 @@ namespace LabelCreator.Helpers
                 typeof(CommandHandler),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.S ,ModifierKeys.Control)
+                    new KeyGesture(Key.S, ModifierKeys.Control)
                 }
             );
+
         public static readonly RoutedUICommand FileOpen = new RoutedUICommand
             (
                 "FileOpen",
@@ -26,7 +27,7 @@ namespace LabelCreator.Helpers
                 typeof(CommandHandler),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.O ,ModifierKeys.Control)
+                    new KeyGesture(Key.O, ModifierKeys.Control)
                 }
             );
 
@@ -37,7 +38,18 @@ namespace LabelCreator.Helpers
                 typeof(CommandHandler),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.F1)
+                    new KeyGesture(Key.N, ModifierKeys.Control)
+                }
+            );
+
+        public static readonly RoutedUICommand Exit = new RoutedUICommand
+            (
+                "NewCanvas",
+                "NewCanvas",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.F4, ModifierKeys.Alt)
                 }
             );
     }

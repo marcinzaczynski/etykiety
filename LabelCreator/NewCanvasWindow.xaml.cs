@@ -46,20 +46,19 @@ namespace LabelCreator
         {
             //var decimalseparator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-            if (e.Text.Equals(",") || e.Text.Equals("."))
-            {
-                var tb = sender as TextBox;
+            //if (e.Text.Equals(",") || e.Text.Equals("."))
+            //{
+            //    var tb = sender as TextBox;
 
-                if (!tb.Text.Contains("."))
-                {
-                    tb.Text += ".";
-                    tb.SelectionStart = tb.Text.Length;
-                }
-                
-                e.Handled = true;
-            }
+            //    if (!tb.Text.Contains("."))
+            //    {
+            //        tb.Text += ".";
+            //        tb.SelectionStart = tb.Text.Length;
+            //    }
 
-            
+            //    e.Handled = true;
+            //}
+
             //string s1 = "12.34";
             //string s2 = "15,75";
 
@@ -91,6 +90,13 @@ namespace LabelCreator
             //{
             //    e.Handled = true;
             //}
+
+            //((TextBox)sender).Text = ((TextBox)sender).Text.Replace(" ", "");
+
+            if (!char.IsDigit(e.Text[0]))
+            {
+                e.Handled = true;
+            }
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -100,5 +106,6 @@ namespace LabelCreator
                 tb.SelectAll();
             }
         }
+
     }
 }

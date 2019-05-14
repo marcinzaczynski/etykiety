@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LabelCreator.Helpers;
 using LabelCreator.ViewModel;
 
 namespace LabelCreator
@@ -21,6 +22,9 @@ namespace LabelCreator
     /// </summary>
     public partial class MainWindow : Window
     {
+        // wartość przeskoku skalowania
+        double SliderChangeVal = 0.2;
+
         // Współrzędne przesówanego komponentu
         double FirstXPos, FirstYPos;
 
@@ -34,7 +38,7 @@ namespace LabelCreator
         public MainWindow()
         {
             InitializeComponent();
-
+            
             // Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
             this.PreviewMouseMove += this.MouseMove;
         }
@@ -56,7 +60,7 @@ namespace LabelCreator
             lbl.Content = "new label";
             lbl.BorderBrush = Brushes.Black;
             lbl.BorderThickness = new Thickness(1);
-            DesigningCanvas.Children.Add(lbl);
+            MainCanvas.Children.Add(lbl);
             Canvas.SetLeft(lbl, 0);
             Canvas.SetTop(lbl, 0);
             lbl.MouseEnter += this.Label_MouseEnter;
@@ -65,16 +69,47 @@ namespace LabelCreator
             lbl.Cursor = Cursors.Hand;
         }
 
+        private void ButtonMarginesy_Click(object sender, RoutedEventArgs e)
+        {
+            var x = MainCanvas.ActualWidth;
+            var y = MainCanvas.ActualHeight;
 
-        private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
+            //var marginTop = AppHandler.DrawMargin(x + 10);
+            //var marginTop = new Label();
+            //marginTop.Width = x + 10;
+            //marginTop.Height = 1;
+            //marginTop.BorderBrush = new SolidColorBrush(Colors.Red);
+            //marginTop.BorderThickness = new Thickness(2);
+            //marginTop.Name = "MarginTop";
+            //DesigningCanvas.Children.Add(marginTop);
+            //Canvas.SetLeft(marginTop, -5);
+            //Canvas.SetTop(marginTop, 5);
+            //marginTop.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
+            //marginTop.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
+            //marginTop.Cursor = Cursors.SizeNS;
+
+            //var marginBottom = AppHandler.DrawMargin(x + 10);
+            //marginBottom.Name = "MarginBottom";
+            //DesigningCanvas.Children.Add(marginBottom);
+            //Canvas.SetLeft(marginBottom, -5);
+            //Canvas.SetTop(marginBottom, y-5);
+            //marginBottom.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
+            //marginBottom.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
+            //marginBottom.Cursor = Cursors.SizeNS;
+        }
+
+
+        #region COMMAND
+
+            private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
         {
             NewCanvasWindow cnw = new NewCanvasWindow();
 
             cnw.ShowDialog();
             var vm = cnw.DataContext as NewCanvasViewModel;
 
-            var w = vm.Width;
-            var h = vm.Height;
+            MainVM.CanvasHeight = vm.Height;
+            MainVM.CanvasWidth = vm.Width;
 
             // Drukowanie Canvas
             //var dialog = new PrintDialog();
@@ -84,16 +119,12 @@ namespace LabelCreator
             //}
         }
 
-        private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Command_Exit(object sender, ExecutedRoutedEventArgs e)
         {
-
-            //In this event, we get current mouse position on the control to use it in the MouseMove event.
-            FirstXPos = e.GetPosition(sender as Control).X;
-            FirstYPos = e.GetPosition(sender as Control).Y;
-            FirstArrowXPos = e.GetPosition((sender as Control).Parent as Control).X - FirstXPos;
-            FirstArrowYPos = e.GetPosition((sender as Control).Parent as Control).Y - FirstYPos;
-            MovingObject = sender;
+            Environment.Exit(0);
         }
+
+        #endregion 
 
 
         private void DesigningCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -102,11 +133,11 @@ namespace LabelCreator
             {
                 if (e.Delta > 0)
                 {
-                    SliderCanvasZoom.Value += 0.2;
+                    SliderCanvasZoom.Value += SliderChangeVal;
                 }
                 else
                 {
-                    SliderCanvasZoom.Value -= 0.2;
+                    SliderCanvasZoom.Value -= SliderChangeVal;
                 }
             }
         }
@@ -117,37 +148,77 @@ namespace LabelCreator
 
             CanvasScaleTransform.ScaleX = newVal;
             CanvasScaleTransform.ScaleY = newVal;
+        }        
 
-        }
-
-        private new void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Button_ChangeCanvasZoom(object sender, RoutedEventArgs e)
         {
-            MovingObject = null;
+            if(sender is Button btn)
+            {
+                switch (btn.Tag)
+                {
+                    case "Plus":
+                        SliderCanvasZoom.Value += SliderChangeVal;
+                        break;
+                    case "Minus":
+                        SliderCanvasZoom.Value -= SliderChangeVal;
+                        break;
+                    case "Default":
+                        SliderCanvasZoom.Value = 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
+
+
+        private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //In this event, we get current mouse position on the control to use it in the MouseMove event.
+            FirstXPos = e.GetPosition(sender as Control).X;
+            FirstYPos = e.GetPosition(sender as Control).Y;
+            FirstArrowXPos = e.GetPosition(MainCanvas).X - FirstXPos;
+            FirstArrowYPos = e.GetPosition(MainCanvas).Y - FirstYPos;
+            MovingObject = sender;
+        }        
 
         private new void MouseMove(object sender, MouseEventArgs e)
         {
             // JEŚLI WCIŚNIĘTY LEWY PRZYCISK MYSZY NA JAKIMŚ KOMPONENCIE
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (MovingObject is FrameworkElement tempMovingObject)
+                if (MovingObject is FrameworkElement tmp)
                 {
-                    var xNewPosition = e.GetPosition((tempMovingObject).Parent as FrameworkElement).X - FirstXPos;
-                    var yNewPosition = e.GetPosition((tempMovingObject).Parent as FrameworkElement).Y - FirstYPos;
+                    var tmpParent = tmp.Parent as FrameworkElement;
 
-                    if (xNewPosition > 0 && xNewPosition + tempMovingObject.ActualWidth < DesigningCanvas.ActualWidth)
+                    var xNewPosition = e.GetPosition(tmpParent).X - FirstXPos;
+                    var yNewPosition = e.GetPosition(tmpParent).Y - FirstYPos;
+
+                    var lMarginPos = tmp.Name.Contains("Margin") ? 0 : (double)MarginL.GetValue(Canvas.LeftProperty);
+                    var rMarginPos = tmp.Name.Contains("Margin") ? MainCanvas.ActualWidth : (double)MarginR.GetValue(Canvas.LeftProperty);
+
+                    // PRZESÓWANIE PO OSI X - LEWO, PRAWO - OGRANICZENIE DO ROZMIARÓW CANVASA LUB MARGINESÓW
+                    if (xNewPosition > lMarginPos && xNewPosition + tmp.ActualWidth < rMarginPos)
                     {
-                        (MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty, xNewPosition);
+                        tmp.SetValue(Canvas.LeftProperty, xNewPosition);
                     }
 
-                    if (yNewPosition > 0 && yNewPosition + tempMovingObject.ActualHeight < DesigningCanvas.ActualHeight)
+                    var tMarginPos = tmp.Name.Contains("Margin") ? 0 : (double)MarginT.GetValue(Canvas.TopProperty);
+                    var bMarginPos = tmp.Name.Contains("Margin") ? MainCanvas.ActualHeight : (double)MarginB.GetValue(Canvas.TopProperty);
+
+                    // PRZESÓWANIE PO OSI Y - GÓRA, DÓŁ - OGRANICZENIE DO ROZMIARÓW CANVASA LUB MARGINESÓW 
+                    if (yNewPosition > tMarginPos && yNewPosition + tmp.ActualHeight < bMarginPos)
                     {
-                        (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty, yNewPosition);
+                        tmp.SetValue(Canvas.TopProperty, yNewPosition);
                     }
                 }
             }
         }
-
+        
+        private new void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MovingObject = null;
+        }
 
     }
 }

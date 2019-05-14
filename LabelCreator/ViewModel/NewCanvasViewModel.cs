@@ -28,7 +28,7 @@ namespace LabelCreator.ViewModel
         {
             get { return height; }
             set { height = value; OnPropertyChanged("Heihgt"); }
-        }
+        }       
 
         public NewCanvasViewModel()
         {

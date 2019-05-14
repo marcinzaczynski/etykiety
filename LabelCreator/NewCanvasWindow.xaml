@@ -7,24 +7,29 @@
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel" x:Class="LabelCreator.NewCanvasWindow"
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" Height="200" Width="400">
+        Title="NewCanvasWindow" Height="300" Width="400">
     <Window.DataContext>
         <ViewModel:NewCanvasViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <helpers:DoubleConverter x:Key="DoubleConverter" />
         <Style x:Key="DoubleFormat" TargetType="TextBox" >
-            <EventSetter Event="PreviewTextInput"  Handler="Double_PreviewTextInput"/>
-            <EventSetter Event="GotKeyboardFocus"  Handler="TextBox_GotFocus"/>
-            <EventSetter Event="GotMouseCapture"  Handler="TextBox_GotFocus"/>
+            <!--<EventSetter Event="PreviewTextInput"  Handler="Double_PreviewTextInput"/>-->
+            <!--<EventSetter Event="GotKeyboardFocus"  Handler="TextBox_GotFocus"/>-->
+            <!--<EventSetter Event="GotMouseCapture"  Handler="TextBox_GotFocus"/>-->
+        </Style>
+        <Style x:Key="ControlButton" TargetType="Button">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Margin" Value="5"/>
         </Style>
     </Window.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -34,17 +39,24 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0">
             <StackPanel Orientation="Horizontal">
-                <Label Content="Szerokość:"/>
-                <TextBox Width="120" 
-                         Text="{Binding Width, Mode=TwoWay, StringFormat=\{0:F\}, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
-                         Style="{StaticResource DoubleFormat}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
                 <Label Content="Wysokość:"/>
                 <TextBox Width="120" 
-                         Text="{Binding Height, Mode=TwoWay, StringFormat=\{0:F\}, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
+                         Text="{Binding Height, Converter={StaticResource DoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                          Style="{StaticResource DoubleFormat}"/>
+                <Label Content="mm"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Szerokość:"/>
+                <TextBox Width="120" 
+                         Text="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
+                         Style="{StaticResource DoubleFormat}"/>
+                <Label Content="mm"/>
+            </StackPanel>            
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+            <Button Style="{StaticResource ControlButton}" Content="OK"></Button>
+            <Button Style="{StaticResource ControlButton}" Content="Anuluj"></Button>
         </StackPanel>
     </Grid>
 </Window>
