@@ -7,10 +7,21 @@
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel" x:Class="LabelCreator.NewCanvasWindow"
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" Height="300" Width="400">
+        Title="NewCanvasWindow" Width="530">
+    
     <Window.DataContext>
-        <ViewModel:NewCanvasViewModel/>
+        <ViewModel:NewCanvasViewModel x:Name="NewCanvasVM"/>
     </Window.DataContext>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.Ok" 
+                        Executed="CommanOk_Executed" 
+                        CanExecute="CommandOk_CanExecute"/>
+        <CommandBinding Command="helpers:CommandHandler.Cancel" 
+                        Executed="CommanCancel_Executed" 
+                        CanExecute="CommandCancel_CanExecute"/>
+    </Window.CommandBindings>
+    
     <Window.Resources>
         <helpers:DoubleConverter x:Key="DoubleConverter" />
         <Style x:Key="DoubleFormat" TargetType="TextBox" >
@@ -20,43 +31,63 @@
         </Style>
         <Style x:Key="ControlButton" TargetType="Button">
             <Setter Property="Width" Value="80"/>
-            <Setter Property="Height" Value="25"/>
+            <Setter Property="Height" Value="35"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="170"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Row="0" Grid.Column="0" x:Name="ListBoxPrinters"/>
+        <ListBox Grid.Row="0" Grid.Column="0" x:Name="ListBoxPrinters" SelectionChanged="ListBoxPrinters_SelectionChanged"/>
 
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Wysokość:"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" >
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <Label Content="Nazwa:" Width="90" HorizontalContentAlignment="Right"/>
+                <TextBox Width="120" 
+                         Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                         Style="{StaticResource DoubleFormat}"/>
+                <Label Content="mm"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <Label Content="Wysokość:" Width="90" HorizontalContentAlignment="Right"/>
                 <TextBox Width="120" 
                          Text="{Binding Height, Converter={StaticResource DoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                          Style="{StaticResource DoubleFormat}"/>
                 <Label Content="mm"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Szerokość:"/>
+            
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <Label Content="Szerokość:" Width="90" HorizontalContentAlignment="Right"/>
                 <TextBox Width="120" 
                          Text="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
                          Style="{StaticResource DoubleFormat}"/>
                 <Label Content="mm"/>
-            </StackPanel>            
+            </StackPanel>
+            
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
-            <Button Style="{StaticResource ControlButton}" Content="OK"></Button>
-            <Button Style="{StaticResource ControlButton}" Content="Anuluj"></Button>
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Ok" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsDefault="True"/> 
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(F1)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Cancel" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsCancel="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(Esc)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

@@ -13,9 +13,14 @@
         Height="470"
         MinHeight="200"
         >
-    <!--<Window.Resources>
-        <ViewModel:MainViewModel />
-    </Window.Resources>-->
+    <Window.Resources>
+        <Style x:Key="MarginStyle" TargetType="Label">
+            <Setter Property="BorderBrush" Value="Red"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MouseLeftButtonDown"></EventSetter>
+            <EventSetter Event="PreviewMouseLeftButtonUp" Handler="PreviewMouseLeftButtonUp"></EventSetter> 
+        </Style>
+    </Window.Resources>
 
     <Window.DataContext>
         <ViewModel:MainViewModel CanvasHeight="270" CanvasWidth="500" x:Name="MainVM"/>
@@ -69,9 +74,14 @@
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
             <GroupBox  Header="Komponenty">
-                <TreeView BorderBrush="{x:Null}">
-                    <TreeViewItem Header="TreeViewItem" IsExpanded="True">
-                        <TreeViewItem Header="TreeViewItem" HorizontalAlignment="Left" />
+                <TreeView BorderBrush="{x:Null}" >
+                    <TreeViewItem Header="{Binding FileName}" IsExpanded="True">
+                        <TreeViewItem Name="TreeViewItemTextsRoot" Header="Tekst" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemTextsFromDbRoot" Header="Tekst z bazy" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemImageFromFileRoot" Header="Obrazek z pliku" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemImageFromDbRoot" Header="Obrazek z bazy" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemBarcodeRoot" Header="Kod kreskowy" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemBarcodeFromDbRoot" Header="Kod kreskowy z bazy" HorizontalAlignment="Left" />
                     </TreeViewItem>
                 </TreeView>
             </GroupBox>
@@ -84,10 +94,10 @@
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform"/>
                     </Canvas.LayoutTransform>
-                    <Label Name="MarginT" Width="{Binding MarginWidth}" Height="2" BorderBrush="Red" BorderThickness="3" Canvas.Left="-10" Canvas.Top="0" Cursor="SizeNS" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp"/>
-                    <Label Name="MarginB" Width="{Binding MarginWidth}" Height="2" BorderBrush="Red" BorderThickness="3" Canvas.Left="-10" Canvas.Top="{Binding CanvasHeight}" Cursor="SizeNS" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp"/>
-                    <Label Name="MarginL" Width="2" Height="{Binding MarginHeight}" BorderBrush="Red" BorderThickness="3" Canvas.Left="0" Canvas.Top="-10" Cursor="SizeWE" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp"/>
-                    <Label Name="MarginR" Width="2" Height="{Binding MarginHeight}" BorderBrush="Red" BorderThickness="3" Canvas.Left="{Binding CanvasWidth}" Canvas.Top="-10" Cursor="SizeWE" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp"/>
+                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="0"/>
+                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding CanvasHeight}" />
+                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Left="0" Canvas.Top="{Binding MarginOffsetSize}"/>
+                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Left="{Binding CanvasWidth}" Canvas.Top="{Binding MarginOffsetSize}"/>
                 </Canvas>
                 <!--</helpers:FunkyBorder>-->
             </GroupBox>

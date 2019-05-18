@@ -9,11 +9,16 @@ namespace LabelCreator.ViewModel
 {
     public class NewCanvasViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
+        public NewCanvasViewModel()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        }
+
+        private string fileName = "Canvas1";
+        public string FileName
+        {
+            get { return fileName; }
+            set { fileName = value; OnPropertyChanged("FileName"); }
         }
 
         private double width;
@@ -27,13 +32,15 @@ namespace LabelCreator.ViewModel
         public double Height
         {
             get { return height; }
-            set { height = value; OnPropertyChanged("Heihgt"); }
-        }       
-
-        public NewCanvasViewModel()
-        {
-
+            set { height = value; OnPropertyChanged("Height"); }
         }
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace LabelCreator
         public MainWindow()
         {
             InitializeComponent();
-            
+
             // Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
             this.PreviewMouseMove += this.MouseMove;
         }
@@ -101,15 +101,23 @@ namespace LabelCreator
 
         #region COMMAND
 
-            private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
+        private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
         {
             NewCanvasWindow cnw = new NewCanvasWindow();
 
             cnw.ShowDialog();
-            var vm = cnw.DataContext as NewCanvasViewModel;
 
-            MainVM.CanvasHeight = vm.Height;
-            MainVM.CanvasWidth = vm.Width;
+            if(cnw.WindowResult)
+            {
+                MainVM.FileName = cnw.NewCanvasVM.FileName;
+                MainVM.CanvasHeight = cnw.NewCanvasVM.Height;
+                MainVM.CanvasWidth = cnw.NewCanvasVM.Width;
+
+                MainCanvas.UpdateLayout();
+            }
+
+
+            
 
             // Drukowanie Canvas
             //var dialog = new PrintDialog();
@@ -148,11 +156,11 @@ namespace LabelCreator
 
             CanvasScaleTransform.ScaleX = newVal;
             CanvasScaleTransform.ScaleY = newVal;
-        }        
+        }
 
         private void Button_ChangeCanvasZoom(object sender, RoutedEventArgs e)
         {
-            if(sender is Button btn)
+            if (sender is Button btn)
             {
                 switch (btn.Tag)
                 {
@@ -180,7 +188,7 @@ namespace LabelCreator
             FirstArrowXPos = e.GetPosition(MainCanvas).X - FirstXPos;
             FirstArrowYPos = e.GetPosition(MainCanvas).Y - FirstYPos;
             MovingObject = sender;
-        }        
+        }
 
         private new void MouseMove(object sender, MouseEventArgs e)
         {
@@ -214,7 +222,7 @@ namespace LabelCreator
                 }
             }
         }
-        
+
         private new void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             MovingObject = null;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabelCreator.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -23,10 +24,17 @@ namespace LabelCreator
     /// </summary>
     public partial class NewCanvasWindow : Window
     {
+        public bool WindowResult = false;
+
         public NewCanvasWindow()
         {
             InitializeComponent();
 
+            SetPrintersList();
+        }
+
+        private void SetPrintersList()
+        {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
             foreach (var printer in printerQuery.Get())
@@ -36,7 +44,7 @@ namespace LabelCreator
                 var isDefault = printer.GetPropertyValue("Default");
                 var isNetworkPrinter = printer.GetPropertyValue("Network");
 
-                var str = $"{name} (Status: {status}, Default: {isDefault}, Network: {isNetworkPrinter}";
+                var str = $"{name}; (Status: {status}, Default: {isDefault}, Network: {isNetworkPrinter}";
 
                 ListBoxPrinters.Items.Add(str);
             }
@@ -107,5 +115,41 @@ namespace LabelCreator
             }
         }
 
+        private void ListBoxPrinters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var printerName = e.AddedItems[0].ToString().Split(';')[0].ToString();
+
+            var pageInfo = AppHandler.GetPrinterPageInfo(printerName);
+
+            var width = pageInfo.PaperSize.Width;
+            var height = pageInfo.PaperSize.Height;
+            var name = pageInfo.PaperSize.PaperName;
+
+            NewCanvasVM.FileName = name;
+            NewCanvasVM.Width = width;
+            NewCanvasVM.Height = height;
+
+        }
+
+        private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            WindowResult = true;
+            Close();
+        }
+
+        private void CommandCancel_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CommanCancel_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

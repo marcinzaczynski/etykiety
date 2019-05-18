@@ -11,7 +11,7 @@ namespace LabelCreator.Helpers
     {
         public static readonly RoutedUICommand FileSave = new RoutedUICommand
             (
-                "FileSave",
+                "Zapisz",
                 "FileSave",
                 typeof(CommandHandler),
                 new InputGestureCollection()
@@ -22,7 +22,7 @@ namespace LabelCreator.Helpers
 
         public static readonly RoutedUICommand FileOpen = new RoutedUICommand
             (
-                "FileOpen",
+                "Otwórz",
                 "FileOpen",
                 typeof(CommandHandler),
                 new InputGestureCollection()
@@ -33,7 +33,7 @@ namespace LabelCreator.Helpers
 
         public static readonly RoutedUICommand NewCanvas = new RoutedUICommand
             (
-                "NewCanvas",
+                "Nowa etykieta",
                 "NewCanvas",
                 typeof(CommandHandler),
                 new InputGestureCollection()
@@ -44,12 +44,34 @@ namespace LabelCreator.Helpers
 
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             (
-                "NewCanvas",
+                "Wyjście",
                 "NewCanvas",
                 typeof(CommandHandler),
                 new InputGestureCollection()
                 {
                     new KeyGesture(Key.F4, ModifierKeys.Alt)
+                }
+            );
+
+        public static readonly RoutedUICommand Ok = new RoutedUICommand
+            (
+                "OK",
+                "Ok",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.F1)
+                }
+            );
+
+        public static readonly RoutedUICommand Cancel = new RoutedUICommand
+            (
+                "Anuluj",
+                "Cancel",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.Escape)
                 }
             );
     }
