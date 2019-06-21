@@ -42,6 +42,17 @@ namespace LabelCreator.Helpers
                 }
             );
 
+        public static readonly RoutedUICommand NewText = new RoutedUICommand
+            (
+                "Tekst",
+                "NewText",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.D1, ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             (
                 "Wyjście",
@@ -51,6 +62,13 @@ namespace LabelCreator.Helpers
                 {
                     new KeyGesture(Key.F4, ModifierKeys.Alt)
                 }
+            );
+
+        public static readonly RoutedUICommand EditComponent = new RoutedUICommand
+            (
+                "Edytuj",
+                "EditComponent",
+                typeof(CommandHandler)
             );
 
         public static readonly RoutedUICommand Ok = new RoutedUICommand

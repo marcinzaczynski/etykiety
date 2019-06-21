@@ -37,6 +37,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,8 +58,12 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\FunkyBorder.cs" />
+    <Compile Include="NewTextWindow.xaml.cs">
+      <DependentUpon>NewTextWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NewCanvasViewModel.cs" />
+    <Compile Include="ViewModel\NewTextViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -74,6 +79,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewCanvasWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

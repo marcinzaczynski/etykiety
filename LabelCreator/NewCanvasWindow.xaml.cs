@@ -151,5 +151,10 @@ namespace LabelCreator
         {
             Close();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+
+        }
     }
 }

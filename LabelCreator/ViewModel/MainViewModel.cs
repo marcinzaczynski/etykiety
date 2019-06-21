@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace LabelCreator.ViewModel
 {
@@ -11,7 +12,7 @@ namespace LabelCreator.ViewModel
     {
         public MainViewModel()
         {
-
+            
         }
 
         // ========================= FIELDS ====================================
@@ -75,7 +76,15 @@ namespace LabelCreator.ViewModel
             get { return marginOffsetSize; }
             set { marginOffsetSize = value; OnPropertyChanged("MarginOffsetSize"); }
         }
-        
+
+        // AKTUALNIE KLIKNIĘTY KOMPONENT NA CANVASIE
+        private string currentComponentName;
+        public string CurrentComponentName
+        {
+            get { return currentComponentName; }
+            set { currentComponentName = value; OnPropertyChanged("CurrentComponentName"); }
+        }
+
         #endregion
         // =====================================================================
 
