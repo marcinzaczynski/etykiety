@@ -51,44 +51,17 @@ namespace LabelCreator
             NewText = new Label();
             NewTextBlock = new TextBlock();
             NewText.Content = NewTextBlock;
-            BindData();
+
+            AppHandler.BindData(NewText, NewTextBlock);
 
             NewText.DataContext = NewTextVM;
-        }
-
-        private void BindData()
-        {
-            Binding l1 = new Binding("BorderColor");
-            BindingOperations.SetBinding(NewText, Label.BorderBrushProperty, l1);
-
-            Binding l2 = new Binding("BorderThickness");
-            BindingOperations.SetBinding(NewText, Label.BorderThicknessProperty, l2);
-
-            Binding t1 = new Binding("LabelContent");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextProperty, t1);
-
-            Binding t2 = new Binding("TbFontFamily");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontFamilyProperty, t2);
-
-            Binding t3 = new Binding("TbFontSize");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontSizeProperty, t3);
-
-            Binding t4 = new Binding("FontColor");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.ForegroundProperty, t4);
-
-            Binding t5 = new Binding("TbFontWeight");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontWeightProperty, t5);
-
-            Binding t6 = new Binding("TbFontStyle");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontStyleProperty, t6);
-
-            Binding t7 = new Binding("TbTextDecorations");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextDecorationsProperty, t7);
-        }
+        }        
         
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             NewTextVM.FontDialog = fontDialog;
+
+            NewText.Name = NewTextVM.Name;
 
             if (NewTextVM.EditMode)
             {
@@ -98,11 +71,11 @@ namespace LabelCreator
             }
             else
             {
-                var nameExist = MainWindow.ComponentList.Where(c => ((NewTextViewModel)c.DataContext).Name == NewTextVM.Name).FirstOrDefault();
+                var nameExist = MainWindow.ComponentList.Where(c => c.Name == NewTextVM.Name).FirstOrDefault();
 
                 if (nameExist == null)
                 {
-                    NewTextEvent.Invoke(NewText, 2, 2);
+                    NewTextEvent.Invoke(NewText, 2, 2, false);
                 }
                 else
                 {

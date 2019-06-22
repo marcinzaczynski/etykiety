@@ -17,7 +17,7 @@ using LabelCreator.ViewModel;
 
 namespace LabelCreator
 {
-    public delegate void AddNewComponent(FrameworkElement newElement, double left, double top);
+    public delegate void AddNewComponent(FrameworkElement newElement, double left, double top, bool edit);
     public delegate void EditComponent(FrameworkElement element);
 
     /// <summary>
@@ -66,16 +66,19 @@ namespace LabelCreator
         }
 
 
-        private void AddComponentToCanvas(FrameworkElement control, double left = 5, double top = 5)
+        private void AddComponentToCanvas(FrameworkElement control, double left = 5, double top = 5, bool edit = false)
         {
             // Sprawdzenie czy canvas zawiera już komponent o takiej samej nazwie
             //var controlExist = MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == control.Name).FirstOrDefault();
 
-            if(control is Label lbl)
+            if(!edit)
             {
-                TreeViewItemTextsRoot.Items.Add(((NewTextViewModel)lbl.DataContext).Name);
-                TreeViewItemTextsRoot.IsExpanded = true; 
-            }
+                if (control is Label lbl)
+                {
+                    TreeViewItemTextsRoot.Items.Add(lbl.Name);
+                    TreeViewItemTextsRoot.IsExpanded = true;
+                }
+            }            
 
             ComponentList.Add(control);
 
@@ -104,7 +107,7 @@ namespace LabelCreator
                     ComponentList.Remove(componentToEdit);
                     MainCanvas.Children.Remove(componentToEdit);
 
-                    AddComponentToCanvas(control, tmpLeft, tmpTop);
+                    AddComponentToCanvas(control, tmpLeft, tmpTop, true);
 
                     //MainCanvas.Children.Add(control);
 
@@ -112,6 +115,22 @@ namespace LabelCreator
                     //Canvas.SetLeft(control, tmpLeft);
                 }
             }
+        }
+
+        private void ClearCanvas()
+        {
+            var children = MainCanvas.Children.Cast<FrameworkElement>().Where(c => !c.Name.Contains("Margin")).ToList();
+
+            foreach (FrameworkElement item in children)
+            {
+                if(!item.Name.Contains("Margin"))
+                {
+                    MainCanvas.Children.Remove(item);
+                }                
+            }
+
+            TreeViewItemTextsRoot.Items.Clear();
+            ComponentList.Clear();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -179,6 +198,36 @@ namespace LabelCreator
             //}
         }
 
+        private void Command_FileOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            var output = AppHandler.OpenFile();
+
+            if(output != null)
+            {
+                ClearCanvas();
+
+                MainVM.CanvasHeight = output.CanvasHeight;
+                MainVM.CanvasWidth = output.CanvasWidht;
+
+                foreach (var lblDict in output.Labels)
+                {
+                    var lbl = lblDict.Key;
+                    var pos = lblDict.Value;
+
+                    if(lbl.Name.Contains("Margin"))
+                    {
+                        var margin = MainCanvas.FindName(lbl.Name) as Label;
+                        Canvas.SetLeft(margin, pos.CanvasLeft);
+                        Canvas.SetTop(margin, pos.CanvasTop);
+                    }
+                    else
+                    {
+                        AddComponentToCanvas(lbl, pos.CanvasLeft, pos.CanvasTop);
+                    }
+                }
+            }
+        }
+
         private void Command_FileSave(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -188,8 +237,7 @@ namespace LabelCreator
             catch (Exception ex)
             {
                 MessageBox.Show("Zapis etykiety", ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            
+            }            
         }        
 
         private void Command_EditComponent(object sender, ExecutedRoutedEventArgs e)
@@ -317,7 +365,7 @@ namespace LabelCreator
                     }
                 }
             }
-        }       
+        }
 
         private FrameworkElement GetCanvasComponentByName(string name)
         {

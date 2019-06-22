@@ -8,7 +8,7 @@
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="NewTextWindow" Height="450" Width="800">
+        Title="NewTextWindow" Height="450" MinHeight="450" Width="800" MinWidth="800">
 
     <Window.DataContext>
         <ViewModel:NewTextViewModel x:Name="NewTextVM"/>
@@ -38,8 +38,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="390"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <GroupBox Grid.Row="0" Grid.Column="0" Header="Właściwości">

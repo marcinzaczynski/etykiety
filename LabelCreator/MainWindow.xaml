@@ -37,6 +37,10 @@
                         Executed="Command_EditComponent"
                         CanExecute="Command_CanEditComponent"/>
 
+        <CommandBinding Command="helpers:CommandHandler.FileOpen"
+                        Executed="Command_FileOpen"
+                        />
+        
         <CommandBinding Command="helpers:CommandHandler.FileSave"
                         Executed="Command_FileSave"
                         />

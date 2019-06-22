@@ -13,24 +13,55 @@ using Microsoft.Win32;
 using System.IO;
 using LabelCreator.ViewModel;
 using System.Xml.Linq;
+using System.Windows.Data;
+using System.Threading;
 
 namespace LabelCreator.Helpers
 {
-    public class AppHandler
+    public partial class AppHandler
     {
-        public static Rectangle DrawMargin(double width)
+        //public static Rectangle DrawMargin(double width)
+        //{
+        //    Rectangle rect = new Rectangle();
+
+        //    rect.Stroke = new SolidColorBrush(Colors.Red);
+        //    rect.StrokeThickness = 1;
+        //    rect.Fill = new SolidColorBrush(Colors.Red);
+        //    rect.Width = width;
+        //    rect.Height = 2;
+
+        //    return rect;
+        //}
+
+        public static void BindData(Label NewText, TextBlock NewTextBlock)
         {
-            Rectangle rect = new Rectangle();
+            Binding l1 = new Binding("BorderColor");
+            BindingOperations.SetBinding(NewText, Label.BorderBrushProperty, l1);
 
-            rect.Stroke = new SolidColorBrush(Colors.Red);
-            rect.StrokeThickness = 1;
-            rect.Fill = new SolidColorBrush(Colors.Red);
-            rect.Width = width;
-            rect.Height = 2;
+            Binding l2 = new Binding("BorderThickness");
+            BindingOperations.SetBinding(NewText, Label.BorderThicknessProperty, l2);
 
-            return rect;
+            Binding t1 = new Binding("LabelContent");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextProperty, t1);
+
+            Binding t2 = new Binding("TbFontFamily");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontFamilyProperty, t2);
+
+            Binding t3 = new Binding("TbFontSize");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontSizeProperty, t3);
+
+            Binding t4 = new Binding("FontColor");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.ForegroundProperty, t4);
+
+            Binding t5 = new Binding("TbFontWeight");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontWeightProperty, t5);
+
+            Binding t6 = new Binding("TbFontStyle");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.FontStyleProperty, t6);
+
+            Binding t7 = new Binding("TbTextDecorations");
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextDecorationsProperty, t7);
         }
-
 
         public static PageSettings GetPrinterPageInfo(String printerName)
         {
@@ -67,61 +98,16 @@ namespace LabelCreator.Helpers
             return !_regex.IsMatch(text);
         }
 
-        public static bool SaveCanvas(Canvas mainCanvas)
+        public static double StrToDouble(string number)
         {
-            var mystrXAML = XamlWriter.Save(mainCanvas);
+            var separator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-            SaveFileDialog dlg = new SaveFileDialog();
+            var tmp = number.Replace(".", separator).Replace(",", separator);
 
-            var dc = mainCanvas.DataContext;
+            var dec = Convert.ToDouble(tmp);
 
-            dlg.FileName = ((MainViewModel)dc).FileName;
-            //dlg.DefaultExt = ".lblc"; // Default file extension
-            dlg.Filter = "Label Creator document (.lblc)|*.lblc"; // Filter files by extension
-            dlg.RestoreDirectory = true;
-
-            // Show save file dialog box
-            var result = (bool)dlg.ShowDialog();
-
-            if (result)
-            {
-                try
-                {
-                    FileStream filestream = File.Create(dlg.FileName);
-                    StreamWriter streamwriter = new StreamWriter(filestream);
-                    streamwriter.Write(FormatXml(mystrXAML));
-                    streamwriter.Close();
-                    filestream.Close();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }                
-            }
-
-            return result;
+            return dec;
         }
-
-        private static string FormatXml(string xml)
-        {
-            try
-            {
-                XDocument doc = XDocument.Parse(xml);
-
-                XNamespace ns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-
-                // USUNIĘCIE MARGINESÓW Z XMLa
-                //doc.Descendants(ns + "Label")
-                //    .Where(x=> (string)x.Attribute("Name") == "MarginT" || (string)x.Attribute("Name") == "MarginB" || (string)x.Attribute("Name") == "MarginL" || (string)x.Attribute("Name") == "MarginR")
-                //    .Remove();
-                
-
-                return doc.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        
     }
 }
