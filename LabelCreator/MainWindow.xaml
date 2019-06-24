@@ -37,6 +37,10 @@
                         Executed="Command_EditComponent"
                         CanExecute="Command_CanEditComponent"/>
 
+        <CommandBinding Command="helpers:CommandHandler.DeleteComponent" 
+                        Executed="Command_DeleteComponent"
+                        CanExecute="Command_CanDeleteComponent"/>
+
         <CommandBinding Command="helpers:CommandHandler.FileOpen"
                         Executed="Command_FileOpen"
                         />
@@ -112,10 +116,10 @@
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform"/>
                     </Canvas.LayoutTransform>
-                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="0"/>
-                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding CanvasHeight}" />
-                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Left="0" Canvas.Top="{Binding MarginOffsetSize}"/>
-                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Left="{Binding CanvasWidth}" Canvas.Top="{Binding MarginOffsetSize}"/>
+                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </Canvas>
                 <!--</helpers:FunkyBorder>-->
             </GroupBox>
@@ -127,7 +131,9 @@
                     <Label Content="Nazwa:"/>
                     <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
                 </StackPanel>
-                <Button Content="Edytuj" Command="helpers:CommandHandler.EditComponent" />
+                <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
+                <Line Margin="3"></Line>
+                <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.DeleteComponent" />
 
             </StackPanel>
         </GroupBox>

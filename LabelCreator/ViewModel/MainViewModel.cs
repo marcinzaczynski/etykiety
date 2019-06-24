@@ -12,7 +12,7 @@ namespace LabelCreator.ViewModel
     {
         public MainViewModel()
         {
-            
+
         }
 
         // ========================= FIELDS ====================================
@@ -47,7 +47,11 @@ namespace LabelCreator.ViewModel
             {
                 canvasWidth = value;
                 OnPropertyChanged("CanvasWidth");
-                OnPropertyChanged("MarginWidth"); // odświeżenie marginesów
+
+                // odświeżenie długości i pozycje marginesów
+                OnPropertyChanged("MarginWidth"); 
+                MarginDefaultLeft = 0;
+                MarginDefaultRight = value;
             }
         }
 
@@ -60,14 +64,48 @@ namespace LabelCreator.ViewModel
             {
                 canvasHeight = value;
                 OnPropertyChanged("CanvasHeight");
-                OnPropertyChanged("MarginHeight"); // odświeżenie marginesów
+
+                // odświeżenie długości i pozycje marginesów
+                OnPropertyChanged("MarginHeight");
+                MarginDefaultTop = 0;
+                MarginDefaultBottom = value;
             }
         }
 
         // DŁUGOŚĆ MARGINESÓW
         // AdditionalMarginLength - marginesy dłuższe niż obszar roboczy
-        public double MarginWidth { get { return CanvasWidth + AdditionalMarginLength; } } 
-        public double MarginHeight { get { return CanvasHeight + AdditionalMarginLength; } } 
+        public double MarginWidth { get { return CanvasWidth + AdditionalMarginLength; } }
+        public double MarginHeight { get { return CanvasHeight + AdditionalMarginLength; } }
+
+        // DOMYŚLNA POZYCJA MARGINESÓW
+        private double marginDefaultTop;
+        public double MarginDefaultTop
+        {
+            get { return marginDefaultTop; }
+            set { marginDefaultTop = value; OnPropertyChanged("MarginDefaultTop"); }
+        }
+
+        private double marginDefaultBottom;
+        public double MarginDefaultBottom
+        {
+            get { return marginDefaultBottom; }
+            set { marginDefaultBottom = value; OnPropertyChanged("MarginDefaultBottom"); }
+        }
+
+        private double marginDefaultRight;
+        public double MarginDefaultRight
+        {
+            get { return marginDefaultRight; }
+            set { marginDefaultRight = value; OnPropertyChanged("MarginDefaultRight"); }
+        }
+
+        private double marginDefaultLeft;
+        public double MarginDefaultLeft
+        {
+            get { return marginDefaultLeft; }
+            set { marginDefaultLeft = value; OnPropertyChanged("MarginDefaultLeft"); }
+        }
+
 
         // PRZESUNIĘCIE MARGINESÓW POZA CANVAS
         private double marginOffsetSize = MarginOffsetSizeField;

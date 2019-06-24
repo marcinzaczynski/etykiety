@@ -183,6 +183,8 @@ namespace LabelCreator
 
             if (cnw.WindowResult)
             {
+                ClearCanvas();
+
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
                 MainVM.CanvasHeight = cnw.NewCanvasVM.Height;
                 MainVM.CanvasWidth = cnw.NewCanvasVM.Width;
@@ -253,6 +255,34 @@ namespace LabelCreator
         }
 
         private void Command_CanEditComponent(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(MainVM.CurrentComponentName))
+            {
+                e.CanExecute = true;
+            }
+        }
+
+        private void Command_DeleteComponent(object sender, ExecutedRoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Czy na pewno chcesz usunąć ten komponent?", "Potwierdzenie usunięcia", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                var currentComponent = GetCanvasComponentByName(MainVM.CurrentComponentName);
+
+                ComponentList.Remove(currentComponent);
+                MainCanvas.Children.Remove(currentComponent);
+
+                if (currentComponent is Label lbl)
+                {
+                    TreeViewItemTextsRoot.Items.Remove(currentComponent.Name);
+                }
+
+                MainVM.CurrentComponentName = null;
+            }
+        }
+
+        private void Command_CanDeleteComponent(object sender, CanExecuteRoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(MainVM.CurrentComponentName))
             {
@@ -366,6 +396,8 @@ namespace LabelCreator
                 }
             }
         }
+
+        
 
         private FrameworkElement GetCanvasComponentByName(string name)
         {

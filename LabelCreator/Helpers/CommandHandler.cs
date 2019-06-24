@@ -68,7 +68,22 @@ namespace LabelCreator.Helpers
             (
                 "Edytuj",
                 "EditComponent",
-                typeof(CommandHandler)
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.E, ModifierKeys.Control)
+                }
+            );
+
+        public static readonly RoutedUICommand DeleteComponent = new RoutedUICommand
+            (
+                "Usuń",
+                "DeleteComponent",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.Delete)
+                }
             );
 
         public static readonly RoutedUICommand Ok = new RoutedUICommand
