@@ -106,6 +106,14 @@ namespace LabelCreator.ViewModel
             set { marginDefaultLeft = value; OnPropertyChanged("MarginDefaultLeft"); }
         }
 
+        // WIDOCZNOŚĆ MARGINESÓW 
+        private Visibility marginVisibility;
+        public Visibility MarginVisibility
+        {
+            get { return marginVisibility; }
+            set { marginVisibility = value; OnPropertyChanged("MarginVisibility"); }
+        }
+
 
         // PRZESUNIĘCIE MARGINESÓW POZA CANVAS
         private double marginOffsetSize = MarginOffsetSizeField;

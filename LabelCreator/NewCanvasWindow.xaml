@@ -26,7 +26,7 @@
     <Window.Resources>
         <helpers:DoubleConverter x:Key="DoubleConverter" />
         <Style x:Key="DoubleFormat" TargetType="TextBox" >
-            <!--<EventSetter Event="PreviewTextInput"  Handler="Double_PreviewTextInput"/>-->
+            <EventSetter Event="PreviewTextInput"  Handler="Double_PreviewTextInput"/>
             <!--<EventSetter Event="GotKeyboardFocus"  Handler="TextBox_GotFocus"/>-->
             <!--<EventSetter Event="GotMouseCapture"  Handler="TextBox_GotFocus"/>-->
         </Style>
@@ -47,7 +47,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Row="0" Grid.Column="0" x:Name="ListBoxPrinters" SelectionChanged="ListBoxPrinters_SelectionChanged"/>
+        <GroupBox Margin="5" Header="Zainstalowane drukarki:" Grid.Row="0" Grid.Column="0">
+            <ListBox  x:Name="ListBoxPrinters" SelectionChanged="ListBoxPrinters_SelectionChanged"/>
+        </GroupBox>
 
         <StackPanel Grid.Row="1" Grid.Column="0" >
             <StackPanel Orientation="Horizontal" Margin="2">

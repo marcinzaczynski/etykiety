@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -191,13 +192,6 @@ namespace LabelCreator
 
                 MainCanvas.UpdateLayout();
             }
-
-            // Drukowanie Canvas
-            //var dialog = new PrintDialog();
-            //if (dialog.ShowDialog() == true)
-            //{
-            //    dialog.PrintVisual(DesigningCanvas, "Printing canvas");
-            //}
         }
 
         private void Command_FileOpen(object sender, ExecutedRoutedEventArgs e)
@@ -287,6 +281,21 @@ namespace LabelCreator
             if (!string.IsNullOrEmpty(MainVM.CurrentComponentName))
             {
                 e.CanExecute = true;
+            }
+        }
+
+        private void Command_Print(object sender, ExecutedRoutedEventArgs e)
+        {
+            PrintDialog dlg = new PrintDialog();
+
+            var result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                MainVM.MarginVisibility = Visibility.Collapsed;
+                dlg.PrintTicket.PageOrientation = PageOrientation.Portrait;
+                dlg.PrintVisual(MainCanvas, "Printing canvas");
+                MainVM.MarginVisibility = Visibility.Visible;
             }
         }
 

@@ -15,6 +15,7 @@
         >
     <Window.Resources>
         <Style x:Key="MarginStyle" TargetType="Label">
+            <Setter Property="Visibility" Value="{Binding MarginVisibility}"/>
             <Setter Property="BorderBrush" Value="Red"></Setter>
             <Setter Property="BorderThickness" Value="2"></Setter>
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MouseLeftButtonDown"></EventSetter>
@@ -49,6 +50,10 @@
                         Executed="Command_FileSave"
                         />
 
+        <CommandBinding Command="helpers:CommandHandler.Print"
+                        Executed="Command_Print"
+                        />
+
         <CommandBinding Command="helpers:CommandHandler.Exit" 
                         Executed="Command_Exit"/>
         
@@ -81,6 +86,8 @@
                 <Separator/>
                 <MenuItem Header="Otwórz" Command="helpers:CommandHandler.FileOpen"/>
                 <MenuItem Header="Zapisz" Command="helpers:CommandHandler.FileSave"/>
+                <Separator/>
+                <MenuItem Header="Drukuj" Command="helpers:CommandHandler.Print"/>
                 <Separator/>
                 <MenuItem Header="Zamknij" Command="helpers:CommandHandler.Exit"/>
             </MenuItem>

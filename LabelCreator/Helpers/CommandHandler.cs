@@ -31,6 +31,17 @@ namespace LabelCreator.Helpers
                 }
             );
 
+        public static readonly RoutedUICommand Print = new RoutedUICommand
+            (
+                "Drukuj",
+                "Print",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.P, ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand NewCanvas = new RoutedUICommand
             (
                 "Nowa etykieta",
