@@ -64,6 +64,17 @@ namespace LabelCreator.Helpers
                 }
             );
 
+        public static readonly RoutedUICommand NewImage = new RoutedUICommand
+            (
+                "Obraz",
+                "NewImage",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.D2, ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             (
                 "Wyjście",

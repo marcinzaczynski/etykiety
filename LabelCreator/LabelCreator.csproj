@@ -62,11 +62,15 @@
     <Compile Include="Helpers\FileSave.cs" />
     <Compile Include="Helpers\FunkyBorder.cs" />
     <Compile Include="Model\LabelModel.cs" />
+    <Compile Include="NewImageWindow.xaml.cs">
+      <DependentUpon>NewImageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewTextWindow.xaml.cs">
       <DependentUpon>NewTextWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NewCanvasViewModel.cs" />
+    <Compile Include="ViewModel\NewImageViewModel.cs" />
     <Compile Include="ViewModel\NewTextViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -83,6 +87,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewCanvasWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewImageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

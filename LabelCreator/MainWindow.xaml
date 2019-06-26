@@ -65,7 +65,7 @@
             <!--Menu Plik-->
             <RowDefinition Height="auto"/>
             <!--Pasek Toolbox-->
-            <RowDefinition Height="22"/>
+            <RowDefinition Height="25"/>
             <!--Kontent-->
             <RowDefinition Height="*"/>
             <!--Canvas zoom-->
@@ -95,10 +95,10 @@
         </Menu>
 
         <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" Background="#FFF3F3F3">
-            <Button Height="20" Command="helpers:CommandHandler.NewText"  Content="Tekst"/>
-            <Button Height="20" Click="Button_Click" Content="Obraz"/>
-            <Button Height="20" Click="Button_Click" Content="Kod kreskowy"/>
-            <Button Height="20" Click="ButtonMarginesy_Click" Content="Marginesy"/>
+            <Button Height="20" Command="helpers:CommandHandler.NewText" Content="Tekst"/>
+            <Button Height="20" Command="helpers:CommandHandler.NewImage" Content="Obraz"/>
+            <Button Height="20" Content="Kod kreskowy"/>
+            <!--<Button Height="20" Click="ButtonMarginesy_Click" Content="Marginesy"/>-->
         </ToolBar>
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">

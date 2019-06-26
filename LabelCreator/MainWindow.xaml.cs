@@ -48,6 +48,9 @@ namespace LabelCreator
             NewTextWindow.NewTextEvent += new AddNewComponent(AddComponentToCanvas);
             NewTextWindow.EditEvent += new EditComponent(EditComponent);
 
+            NewImageWindow.NewImageEvent += new AddNewComponent(AddComponentToCanvas);
+            NewImageWindow.EditEvent += new EditComponent(EditComponent);
+
             // Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
             PreviewMouseMove += this.MouseMove;
 
