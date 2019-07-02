@@ -70,6 +70,13 @@ namespace LabelCreator
         }
 
 
+        private void Command_NewImage(object sender, ExecutedRoutedEventArgs e)
+        {
+            var newImage = new NewImageWindow();
+
+            newImage.ShowDialog();
+        }
+
         private void AddComponentToCanvas(FrameworkElement control, double left = 5, double top = 5, bool edit = false)
         {
             // Sprawdzenie czy canvas zawiera już komponent o takiej samej nazwie
@@ -81,6 +88,12 @@ namespace LabelCreator
                 {
                     TreeViewItemTextsRoot.Items.Add(lbl.Name);
                     TreeViewItemTextsRoot.IsExpanded = true;
+                }
+
+                if(control is Image img)
+                {
+                    TreeViewItemImageFromFileRoot.Items.Add(img.Name);
+                    TreeViewItemImageFromFileRoot.IsExpanded = true;
                 }
             }            
 
@@ -208,21 +221,26 @@ namespace LabelCreator
                 MainVM.CanvasHeight = output.CanvasHeight;
                 MainVM.CanvasWidth = output.CanvasWidht;
 
-                foreach (var lblDict in output.Labels)
+                foreach (var component in output.Components)
                 {
-                    var lbl = lblDict.Key;
-                    var pos = lblDict.Value;
+                    var cmp = component.Key;
+                    var pos = component.Value;
 
-                    if(lbl.Name.Contains("Margin"))
+                    if(cmp is Label lbl)
                     {
-                        var margin = MainCanvas.FindName(lbl.Name) as Label;
-                        Canvas.SetLeft(margin, pos.CanvasLeft);
-                        Canvas.SetTop(margin, pos.CanvasTop);
+                        if (lbl.Name.Contains("Margin"))
+                        {
+                            var margin = MainCanvas.FindName(lbl.Name) as Label;
+                            Canvas.SetLeft(margin, pos.CanvasLeft);
+                            Canvas.SetTop(margin, pos.CanvasTop);
+                        }
+                        else
+                        {
+                            AddComponentToCanvas(lbl, pos.CanvasLeft, pos.CanvasTop);
+                        }
                     }
-                    else
-                    {
-                        AddComponentToCanvas(lbl, pos.CanvasLeft, pos.CanvasTop);
-                    }
+
+                    
                 }
             }
         }

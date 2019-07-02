@@ -64,9 +64,8 @@ namespace LabelCreator.Helpers
                     lm.CanvasWidht = Convert.ToDouble(StrToDouble(w));
                     lm.CanvasHeight = Convert.ToDouble(StrToDouble(h));
 
-                    lm.Labels = GetLabels(canvas);
-                    
-
+                    GetLabels(canvas, lm.Components);
+                    GetImages(canvas, lm.Components);
 
                     return lm;
                 }
@@ -80,22 +79,22 @@ namespace LabelCreator.Helpers
             throw new Exception("Nie rozpoznano głownego elementu Canvas z pliku");
         }
 
-        private static Dictionary<Label, CanvasPosition> GetLabels(XElement canvas)
+        private static void GetLabels(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
         {
             try
             {
-                Dictionary<Label, CanvasPosition> list = new Dictionary<Label, CanvasPosition>();
+                //Dictionary<UIElement, CanvasPosition> list = new Dictionary<UIElement, CanvasPosition>();
 
                 var labels = canvas.Descendants(Namespace + "Label").ToList();
 
-                foreach (var l in labels)
+                foreach (var lbl in labels)
                 {
-                    Label lbl = new Label();
-                    TextBlock tb = new TextBlock();
+                    Label newLabel = new Label();
+                    TextBlock newTextBlock = new TextBlock();
 
                     NewTextViewModel newTextViewModel = new NewTextViewModel();
 
-                    var textBlock = l.Descendants(Namespace + "TextBlock").FirstOrDefault();
+                    var textBlock = lbl.Descendants(Namespace + "TextBlock").FirstOrDefault();
 
                     if (textBlock != null)
                     {
@@ -158,18 +157,18 @@ namespace LabelCreator.Helpers
                         newTextViewModel.FontDialog.Color = System.Drawing.ColorTranslator.FromHtml(fontColor);
                         newTextViewModel.FontDialog.Font = new System.Drawing.Font(fontFamily, (float)Convert.ToDouble(StrToDouble(fontSize)), fs1 | fs2 | fs3 | fs4);
 
-                        lbl.Content = tb;
+                        newLabel.Content = newTextBlock;
                     }
 
-                    var name = l.Attribute("Name").Value;
+                    var name = lbl.Attribute("Name").Value;
 
-                    lbl.Name = name;
+                    newLabel.Name = name;
                     newTextViewModel.Name = name;                    
 
                     if (!name.Contains("Margin"))
                     {
-                        var borderBrush = l.Attribute("BorderBrush").Value;
-                        var borderThick = l.Attribute("BorderThickness").Value;
+                        var borderBrush = lbl.Attribute("BorderBrush").Value;
+                        var borderThick = lbl.Attribute("BorderThickness").Value;
                         var thickness = Convert.ToInt32(borderThick.Split(',')[0]);
 
                         newTextViewModel.BorderColor = new BrushConverter().ConvertFromString(borderBrush) as SolidColorBrush;
@@ -180,25 +179,37 @@ namespace LabelCreator.Helpers
                         }
                     }
 
-                    var left = l.Attribute("Canvas.Left").Value;
-                    var top = l.Attribute("Canvas.Top").Value;
+                    var left = lbl.Attribute("Canvas.Left").Value;
+                    var top = lbl.Attribute("Canvas.Top").Value;
 
                     var canvasLeft = Convert.ToDouble(StrToDouble(left));
                     var canvasTop = Convert.ToDouble(StrToDouble(top));
                     
-                    lbl.DataContext = newTextViewModel;
+                    newLabel.DataContext = newTextViewModel;
 
-                    AppHandler.BindData(lbl, tb);
+                    AppHandler.BindData(newLabel, newTextBlock);
 
-                    list.Add(lbl, new CanvasPosition(canvasLeft, canvasTop));
+                    list.Add(newLabel, new CanvasPosition(canvasLeft, canvasTop));
                 }
 
-                return list;
+                //return list;
             }
             catch (Exception ex)
             {
                 throw new Exception("Błąd podczas przetwarzania komponentów typu Label. " + ex.Message);
             }            
+        }
+
+
+        private static void GetImages(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
+        {
+            var images = canvas.Descendants(Namespace + "Image").ToList();
+
+            foreach (var img in images)
+            {
+                Image image = new Image();
+                image.Name
+            }
         }
     }
 }

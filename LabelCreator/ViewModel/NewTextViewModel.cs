@@ -53,10 +53,7 @@ namespace LabelCreator.ViewModel
         //{
         //    get { return newText; }
         //    set { newText = value; OnPropertyChanged("NewText"); }
-        //}
-
-        
-        private bool editMode = false;
+        //}        
 
         // ZAPAMIĘTYWANIE CZCIONKI DLA TEKSTU
         private FontDialog fontDialog;
@@ -66,6 +63,8 @@ namespace LabelCreator.ViewModel
             get { return fontDialog; }
             set { fontDialog = value; OnPropertyChanged("FontDialog"); }
         }
+
+        private bool editMode = false;
 
         public bool EditMode
         {

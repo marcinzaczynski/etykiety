@@ -108,6 +108,22 @@ namespace LabelCreator.Helpers
 
             return dec;
         }
+
+        public static string LoadImage()
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+
+            openDialog.Filter = "Image Files (*.bmp;*.jpg;*.jpeg,*.png)|*.BMP;*.JPG;*.JPEG;*.PNG";
+
+            var result = openDialog.ShowDialog();
+
+            if(result == true)
+            {
+                return openDialog.FileName;
+            }
+
+            return null;
+        }
         
     }
 }

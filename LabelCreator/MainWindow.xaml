@@ -34,6 +34,9 @@
         <CommandBinding Command="helpers:CommandHandler.NewText" 
                         Executed="Command_NewText"/>
 
+        <CommandBinding Command="helpers:CommandHandler.NewImage" 
+                        Executed="Command_NewImage"/>
+
         <CommandBinding Command="helpers:CommandHandler.EditComponent" 
                         Executed="Command_EditComponent"
                         CanExecute="Command_CanEditComponent"/>

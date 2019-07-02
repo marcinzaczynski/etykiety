@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace LabelCreator.Helpers
 {
     public class LabelModel
     {
+        public LabelModel()
+        {
+            Components = new Dictionary<UIElement, CanvasPosition>();
+        }
+
         public double CanvasWidht { get; set; }
         public double CanvasHeight { get; set; }
-        public Dictionary<Label, CanvasPosition> Labels { get; set; }
+        public Dictionary<UIElement, CanvasPosition> Components { get; set; }
 
     }
 
