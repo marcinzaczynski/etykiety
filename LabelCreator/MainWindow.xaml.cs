@@ -107,7 +107,6 @@ namespace LabelCreator
             control.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
             control.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
             control.Cursor = Cursors.Hand;
-
         }
 
         private void EditComponent(FrameworkElement control)
@@ -238,6 +237,11 @@ namespace LabelCreator
                         {
                             AddComponentToCanvas(lbl, pos.CanvasLeft, pos.CanvasTop);
                         }
+                    }
+
+                    if(cmp is Image img)
+                    {
+                        AddComponentToCanvas(img, pos.CanvasLeft, pos.CanvasTop);
                     }
 
                     

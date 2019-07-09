@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
 namespace LabelCreator.Helpers
@@ -207,8 +208,32 @@ namespace LabelCreator.Helpers
 
             foreach (var img in images)
             {
-                Image image = new Image();
-                image.Name
+                try
+                {
+                    Image image = new Image();
+                    NewImageViewModel newImageViewModel = new NewImageViewModel();
+
+                    newImageViewModel.Name = img.Attribute("Name").Value;
+                    newImageViewModel.ImageSource = img.Attribute("Source").Value.Replace("file:///", "");
+
+                    image.Name = newImageViewModel.Name;
+                    image.Source = new BitmapImage(new Uri(newImageViewModel.ImageSource));
+
+                    var left = img.Attribute("Canvas.Left").Value;
+                    var top = img.Attribute("Canvas.Top").Value;
+
+                    var canvasLeft = Convert.ToDouble(StrToDouble(left));
+                    var canvasTop = Convert.ToDouble(StrToDouble(top));
+
+                    image.DataContext = newImageViewModel;
+
+                    list.Add(image, new CanvasPosition(canvasLeft, canvasTop));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Błąd podczas przetwarzania komponentów typu Image. " + ex.Message);
+                }
+                
             }
         }
     }
