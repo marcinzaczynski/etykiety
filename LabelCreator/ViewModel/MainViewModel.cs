@@ -10,6 +10,18 @@ namespace LabelCreator.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        // ========================= PROPERTY CHANGE ===========================
+        #region 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion
+        // =====================================================================
+        
         public MainViewModel()
         {
 
@@ -135,16 +147,6 @@ namespace LabelCreator.ViewModel
         // =====================================================================
 
 
-        // ========================= PROPERTY CHANGE ===========================
-        #region 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        #endregion
-        // =====================================================================
+        
     }
 }

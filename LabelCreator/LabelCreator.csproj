@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\main_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
@@ -61,6 +64,7 @@
     <Compile Include="Helpers\FileOpen.cs" />
     <Compile Include="Helpers\FileSave.cs" />
     <Compile Include="Helpers\FunkyBorder.cs" />
+    <Compile Include="Helpers\PrinterHandler.cs" />
     <Compile Include="Model\LabelModel.cs" />
     <Compile Include="NewImageWindow.xaml.cs">
       <DependentUpon>NewImageWindow.xaml</DependentUpon>
@@ -127,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\main_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

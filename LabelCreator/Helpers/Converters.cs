@@ -12,8 +12,8 @@ namespace LabelCreator.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
-            return value;
+            var decVal = System.Convert.ToDecimal(value);
+            return decVal.ToString("F1");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

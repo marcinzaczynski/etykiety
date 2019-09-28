@@ -8,7 +8,7 @@
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         Closed="Window_Closed"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" Width="530">
+        Title="NewCanvasWindow" Width="330" Height="500" ResizeMode="NoResize">
 
     <Window.DataContext>
         <ViewModel:NewCanvasViewModel x:Name="NewCanvasVM"/>
@@ -39,16 +39,22 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="170"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Margin="5" Header="Zainstalowane drukarki:" Grid.Row="0" Grid.Column="0">
-            <ListBox  x:Name="ListBoxPrinters" SelectionChanged="ListBoxPrinters_SelectionChanged"/>
+        <GroupBox Margin="5" Header="Zainstalowane drukarki:" Grid.Row="0" Grid.Column="0" Height="230">
+
+            <StackPanel>
+                <Label Content="Wybierz drukarkę:"/>
+                <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}"/>
+                <Label Content="Wybierz papier:"/>
+                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="100"/>   
+            </StackPanel>
         </GroupBox>
 
         <StackPanel Grid.Row="1" Grid.Column="0" >
@@ -56,24 +62,27 @@
                 <Label Content="Nazwa:" Width="90" HorizontalContentAlignment="Right"/>
                 <TextBox Width="120" 
                          Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                         Style="{StaticResource DoubleFormat}"/>
-                <Label Content="mm"/>
+                         Style="{StaticResource DoubleFormat}"/>                
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Wysokość:" Width="90" HorizontalContentAlignment="Right"/>
-                <TextBox Width="120" 
+                <TextBox Width="60" 
                          Text="{Binding Height, Converter={StaticResource DoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                          Style="{StaticResource DoubleFormat}"/>
                 <Label Content="mm"/>
+                <Label Content="{Binding HeightPx}" Width="35"/>
+                <Label Content="px"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Szerokość:" Width="90" HorizontalContentAlignment="Right"/>
-                <TextBox Width="120" 
+                <TextBox Width="60" 
                          Text="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
                          Style="{StaticResource DoubleFormat}"/>
                 <Label Content="mm"/>
+                <Label Content="{Binding WidthPx}" Width="35"/>
+                <Label Content="px"/>
             </StackPanel>
 
         </StackPanel>

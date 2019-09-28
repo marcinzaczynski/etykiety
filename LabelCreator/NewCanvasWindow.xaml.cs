@@ -1,6 +1,7 @@
 ﻿using LabelCreator.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using System.Management;
@@ -12,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -35,19 +37,29 @@ namespace LabelCreator
 
         private void SetPrintersList()
         {
-            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
+            NewCanvasVM.InstalledPrinters = new List<string>();
 
-            foreach (var printer in printerQuery.Get())
+            foreach (string printer in PrinterSettings.InstalledPrinters)
             {
-                var name = printer.GetPropertyValue("Name");
-                var status = printer.GetPropertyValue("Status");
-                var isDefault = printer.GetPropertyValue("Default");
-                var isNetworkPrinter = printer.GetPropertyValue("Network");
+                NewCanvasVM.InstalledPrinters.Add(printer);
+            }            
+        }
 
-                var str = $"{name}; (Status: {status}, Default: {isDefault}, Network: {isNetworkPrinter}";
+        private void SetPrintersList2()
+        {
+            //var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
-                ListBoxPrinters.Items.Add(str);
-            }
+            //foreach (var printer in printerQuery.Get())
+            //{
+            //    var name = printer.GetPropertyValue("Name");
+            //    var status = printer.GetPropertyValue("Status");
+            //    var isDefault = printer.GetPropertyValue("Default");
+            //    var isNetworkPrinter = printer.GetPropertyValue("Network");
+
+            //    var str = $"{name}; (Status: {status}, Default: {isDefault}, Network: {isNetworkPrinter}";
+
+            //    ListBoxPrinters.Items.Add(str);
+            //}
         }
 
         private void Double_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -109,26 +121,10 @@ namespace LabelCreator
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if(sender is TextBox tb)
+            if(sender is System.Windows.Controls.TextBox tb)
             {
                 tb.SelectAll();
             }
-        }
-
-        private void ListBoxPrinters_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var printerName = e.AddedItems[0].ToString().Split(';')[0].ToString();
-
-            var pageInfo = AppHandler.GetPrinterPageInfo(printerName);
-
-            var width = pageInfo.PaperSize.Width;
-            var height = pageInfo.PaperSize.Height;
-            var name = pageInfo.PaperSize.PaperName;
-
-            NewCanvasVM.FileName = name;
-            NewCanvasVM.Width = width;
-            NewCanvasVM.Height = height;
-
         }
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -156,5 +152,6 @@ namespace LabelCreator
         {
 
         }
+        
     }
 }

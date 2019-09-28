@@ -15,6 +15,7 @@ using LabelCreator.ViewModel;
 using System.Xml.Linq;
 using System.Windows.Data;
 using System.Threading;
+using System.Management;
 
 namespace LabelCreator.Helpers
 {
@@ -61,35 +62,7 @@ namespace LabelCreator.Helpers
 
             Binding t7 = new Binding("TbTextDecorations");
             BindingOperations.SetBinding(NewTextBlock, TextBlock.TextDecorationsProperty, t7);
-        }
-
-        public static PageSettings GetPrinterPageInfo(String printerName)
-        {
-            PrinterSettings settings;
-
-            // If printer name is not set, look for default printer
-            if (String.IsNullOrEmpty(printerName))
-            {
-                foreach (var printer in PrinterSettings.InstalledPrinters)
-                {
-                    settings = new PrinterSettings();
-
-                    settings.PrinterName = printer.ToString();
-
-                    if (settings.IsDefaultPrinter)
-                        return settings.DefaultPageSettings;
-                }
-
-                return null; // <- No default printer  
-            }
-
-            // printer by its name 
-            settings = new PrinterSettings();
-
-            settings.PrinterName = printerName;
-
-            return settings.DefaultPageSettings;
-        }
+        }                       
 
         // TYLKO LICZBY 
         private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text

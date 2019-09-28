@@ -22,9 +22,14 @@ namespace LabelCreator
         public static event AddNewComponent NewImageEvent;
         public static event EditComponent EditEvent;
 
-        public NewImageWindow()
+        public NewImageWindow(Image img = null)
         {
             InitializeComponent();
+
+            if(img != null)
+            {
+                //sdf
+            }
         }
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)

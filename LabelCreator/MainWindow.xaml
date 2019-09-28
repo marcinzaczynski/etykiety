@@ -122,14 +122,16 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
             <GroupBox Header="Obszar roboczy" Padding="10">
                 <!--<helpers:FunkyBorder BorderBrush="Red" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp">-->
-                <Canvas x:Name="MainCanvas" Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2">
+
+
+                <Canvas x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2">
                     <Canvas.LayoutTransform>
-                        <ScaleTransform x:Name="CanvasScaleTransform"/>
+                        <ScaleTransform x:Name="CanvasScaleTransform" />
                     </Canvas.LayoutTransform>
-                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="1" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="1" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="1" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="1" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </Canvas>
                 <!--</helpers:FunkyBorder>-->
             </GroupBox>
@@ -151,9 +153,9 @@
         <GroupBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Header="Zoom">
             <StackPanel Orientation="Horizontal">
                 <Slider x:Name="SliderCanvasZoom" Width="200" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderCanvasZoom_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"/>
-                <Button Content="1:1" Width="50" Margin="2" Click="Button_ChangeCanvasZoom" Tag="Default"/>
-                <Button Content="+" Width="30" Margin="2" Click="Button_ChangeCanvasZoom" Tag="Plus"/>
-                <Button Content="-" Width="30" Margin="2" Click="Button_ChangeCanvasZoom" Tag="Minus"/>
+                <Button Width="50" Margin="2" Content="1:1" Click="Button_ChangeCanvasZoom" Tag="Default"/>
+                <Button Width="30" Margin="2" Content="+" Click="Button_ChangeCanvasZoom" Tag="Plus"/>
+                <Button Width="30" Margin="2" Content="-" Click="Button_ChangeCanvasZoom" Tag="Minus"/>
             </StackPanel>
         </GroupBox>
 

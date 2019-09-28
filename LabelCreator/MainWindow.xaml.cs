@@ -82,7 +82,7 @@ namespace LabelCreator
             // Sprawdzenie czy canvas zawiera już komponent o takiej samej nazwie
             //var controlExist = MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == control.Name).FirstOrDefault();
 
-            if(!edit)
+            if (!edit)
             {
                 if (control is Label lbl)
                 {
@@ -90,12 +90,12 @@ namespace LabelCreator
                     TreeViewItemTextsRoot.IsExpanded = true;
                 }
 
-                if(control is Image img)
+                if (control is Image img)
                 {
                     TreeViewItemImageFromFileRoot.Items.Add(img.Name);
                     TreeViewItemImageFromFileRoot.IsExpanded = true;
                 }
-            }            
+            }
 
             ComponentList.Add(control);
 
@@ -139,10 +139,10 @@ namespace LabelCreator
 
             foreach (FrameworkElement item in children)
             {
-                if(!item.Name.Contains("Margin"))
+                if (!item.Name.Contains("Margin"))
                 {
                     MainCanvas.Children.Remove(item);
-                }                
+                }
             }
 
             TreeViewItemTextsRoot.Items.Clear();
@@ -202,8 +202,8 @@ namespace LabelCreator
                 ClearCanvas();
 
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
-                MainVM.CanvasHeight = cnw.NewCanvasVM.Height;
-                MainVM.CanvasWidth = cnw.NewCanvasVM.Width;
+                MainVM.CanvasHeight = cnw.NewCanvasVM.HeightPx;
+                MainVM.CanvasWidth = cnw.NewCanvasVM.WidthPx;
 
                 MainCanvas.UpdateLayout();
             }
@@ -213,9 +213,11 @@ namespace LabelCreator
         {
             var output = AppHandler.OpenFile();
 
-            if(output != null)
+            if (output != null)
             {
                 ClearCanvas();
+
+                MainVM.CurrentComponentName = null;
 
                 MainVM.CanvasHeight = output.CanvasHeight;
                 MainVM.CanvasWidth = output.CanvasWidht;
@@ -225,7 +227,7 @@ namespace LabelCreator
                     var cmp = component.Key;
                     var pos = component.Value;
 
-                    if(cmp is Label lbl)
+                    if (cmp is Label lbl)
                     {
                         if (lbl.Name.Contains("Margin"))
                         {
@@ -239,12 +241,10 @@ namespace LabelCreator
                         }
                     }
 
-                    if(cmp is Image img)
+                    if (cmp is Image img)
                     {
                         AddComponentToCanvas(img, pos.CanvasLeft, pos.CanvasTop);
                     }
-
-                    
                 }
             }
         }
@@ -258,8 +258,8 @@ namespace LabelCreator
             catch (Exception ex)
             {
                 MessageBox.Show("Zapis etykiety", ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
-            }            
-        }        
+            }
+        }
 
         private void Command_EditComponent(object sender, ExecutedRoutedEventArgs e)
         {
@@ -270,6 +270,13 @@ namespace LabelCreator
                 NewTextWindow newTextWindow = new NewTextWindow(lbl);
 
                 newTextWindow.ShowDialog();
+            }
+
+            if (currentComponent is Image img)
+            {
+                NewImageWindow newImageWindow = new NewImageWindow();
+
+                newImageWindow.ShowDialog();
             }
         }
 
@@ -297,6 +304,11 @@ namespace LabelCreator
                     TreeViewItemTextsRoot.Items.Remove(currentComponent.Name);
                 }
 
+                if (currentComponent is Image img)
+                {
+                    TreeViewItemImageFromFileRoot.Items.Remove(img.Name);
+                }
+
                 MainVM.CurrentComponentName = null;
             }
         }
@@ -317,9 +329,23 @@ namespace LabelCreator
 
             if (result == true)
             {
+
                 MainVM.MarginVisibility = Visibility.Collapsed;
-                dlg.PrintTicket.PageOrientation = PageOrientation.Portrait;
-                dlg.PrintVisual(MainCanvas, "Printing canvas");
+
+                //var con = 0.254;
+                Size pageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
+                //MainCanvas.Measure(pageSize);
+                MainCanvas.Arrange(new Rect(MainCanvas.DesiredSize));
+                //MainCanvas.Arrange(new Rect(0, 0, pageSize.Width, pageSize.Height));
+                try
+                {
+                    dlg.PrintVisual(MainCanvas, "Printing canvas");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
                 MainVM.MarginVisibility = Visibility.Visible;
             }
         }
@@ -391,13 +417,18 @@ namespace LabelCreator
         {
             if (sender is FrameworkElement fe)
             {
-                if (fe.DataContext is NewTextViewModel vm)
+                if (fe.DataContext is NewTextViewModel tvm)
                 {
-                    MainVM.CurrentComponentName = vm.Name;
+                    MainVM.CurrentComponentName = tvm.Name;
+                }
+
+                if (fe.DataContext is NewImageViewModel ivm)
+                {
+                    MainVM.CurrentComponentName = ivm.Name;
                 }
             }
         }
-        
+
         private new void MouseMove(object sender, MouseEventArgs e)
         {
             // JEŚLI WCIŚNIĘTY LEWY PRZYCISK MYSZY NA JAKIMŚ KOMPONENCIE
@@ -431,11 +462,13 @@ namespace LabelCreator
             }
         }
 
-        
+
 
         private FrameworkElement GetCanvasComponentByName(string name)
         {
-            return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.DataContext is NewTextViewModel).ToList().Where(cc => ((NewTextViewModel)cc.DataContext).Name == name).FirstOrDefault();
+            //return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.DataContext is NewTextViewModel).ToList().Where(cc => ((NewTextViewModel)cc.DataContext).Name == name).FirstOrDefault();
+
+            return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == name).FirstOrDefault();
         }
 
         private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
