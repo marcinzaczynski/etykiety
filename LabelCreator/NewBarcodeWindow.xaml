@@ -1,0 +1,109 @@
+﻿<Window x:Class="LabelCreator.NewBarcodeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LabelCreator"
+        mc:Ignorable="d"
+        xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel"
+        xmlns:helpers="clr-namespace:LabelCreator.Helpers"
+        Title="NewBarcodeWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+
+    <Window.DataContext>
+        <ViewModel:NewBarcodeViewModel x:Name="NewBarcodeVM"/>
+    </Window.DataContext>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.Ok" 
+                        Executed="CommanOk_Executed" 
+                        CanExecute="CommandOk_CanExecute"/>
+        <CommandBinding Command="helpers:CommandHandler.Cancel" 
+                        Executed="CommanCancel_Executed" 
+                        CanExecute="CommandCancel_CanExecute"/>
+    </Window.CommandBindings>
+
+    <Window.Resources>
+        <Style x:Key="LabelWidth" TargetType="Label">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        </Style>
+        <Style x:Key="ControlButton" TargetType="Button">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="StackPanelRow" TargetType="StackPanel">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="58"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.Column="0" Margin="5" Header="Generowanie kodu">
+            <StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Typ:"/>
+                    <ComboBox ItemsSource="{Binding CodeFormatList}" SelectedItem="{Binding SelectedCodeFormat}" Width="150"/>
+                    <!--<Label ToolTip="{Binding}"/>-->
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Tekst:"/>
+                    <TextBox Text="{Binding CodeText, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center" MaxLength="20"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Szerokość:"/>
+                    <TextBox Text="{Binding CodeWidth, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center" MaxLength="3"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Wysokość:"/>
+                    <TextBox Text="{Binding CodeHeight, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center" MaxLength="3"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Margines:"/>
+                    <TextBox Text="{Binding CodeMargin, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center" MaxLength="2"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Tylko kod:"/>
+                    <CheckBox IsChecked="{Binding PureCode}"  VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left"/>
+                </Border>
+            </StackPanel>
+
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Ok" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsDefault="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(F1)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Cancel" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsCancel="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(Esc)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="{Binding TextHint}" FontSize="10" Foreground="Red" Width="auto"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
