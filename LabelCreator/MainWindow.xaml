@@ -37,6 +37,9 @@
         <CommandBinding Command="helpers:CommandHandler.NewImage" 
                         Executed="Command_NewImage"/>
 
+        <CommandBinding Command="helpers:CommandHandler.NewBarcode" 
+                        Executed="Command_NewBarcode"/>
+
         <CommandBinding Command="helpers:CommandHandler.EditComponent" 
                         Executed="Command_EditComponent"
                         CanExecute="Command_CanEditComponent"/>
@@ -100,7 +103,7 @@
         <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" Background="#FFF3F3F3">
             <Button Height="20" Command="helpers:CommandHandler.NewText" Content="Tekst"/>
             <Button Height="20" Command="helpers:CommandHandler.NewImage" Content="Obraz"/>
-            <Button Height="20" Content="Kod kreskowy"/>
+            <Button Height="20" Command="helpers:CommandHandler.NewBarcode" Content="Kod kreskowy"/>
             <!--<Button Height="20" Click="ButtonMarginesy_Click" Content="Marginesy"/>-->
         </ToolBar>
 

@@ -75,6 +75,17 @@ namespace LabelCreator.Helpers
                 }
             );
 
+        public static readonly RoutedUICommand NewBarcode = new RoutedUICommand
+            (
+                "Kod",
+                "NewBarcode",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.D3, ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             (
                 "Wyjście",

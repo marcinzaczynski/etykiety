@@ -54,18 +54,28 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="zxing, Version=0.16.4.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.4\lib\net45\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.4.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.4\lib\net45\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\BarcodeHandler.cs" />
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\FileOpen.cs" />
     <Compile Include="Helpers\FileSave.cs" />
     <Compile Include="Helpers\FunkyBorder.cs" />
     <Compile Include="Helpers\PrinterHandler.cs" />
     <Compile Include="Model\LabelModel.cs" />
+    <Compile Include="NewBarcodeWindow.xaml.cs">
+      <DependentUpon>NewBarcodeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewImageWindow.xaml.cs">
       <DependentUpon>NewImageWindow.xaml</DependentUpon>
     </Compile>
@@ -73,6 +83,7 @@
       <DependentUpon>NewTextWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NewBarcodeViewModel.cs" />
     <Compile Include="ViewModel\NewCanvasViewModel.cs" />
     <Compile Include="ViewModel\NewImageViewModel.cs" />
     <Compile Include="ViewModel\NewTextViewModel.cs" />
@@ -90,6 +101,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewBarcodeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="NewCanvasWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +139,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

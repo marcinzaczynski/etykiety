@@ -69,12 +69,18 @@ namespace LabelCreator
             //}
         }
 
-
         private void Command_NewImage(object sender, ExecutedRoutedEventArgs e)
         {
             var newImage = new NewImageWindow();
 
             newImage.ShowDialog();
+        }
+
+        private void Command_NewBarcode(object sender, ExecutedRoutedEventArgs e)
+        {
+            var newBarcodeWindow = new NewBarcodeWindow();
+
+            newBarcodeWindow.ShowDialog();
         }
 
         private void AddComponentToCanvas(FrameworkElement control, double left = 5, double top = 5, bool edit = false)
@@ -253,6 +259,7 @@ namespace LabelCreator
         {
             try
             {
+                SliderCanvasZoom.Value = 1;
                 AppHandler.SaveCanvas(MainCanvas);
             }
             catch (Exception ex)
@@ -323,6 +330,7 @@ namespace LabelCreator
 
         private void Command_Print(object sender, ExecutedRoutedEventArgs e)
         {
+            SliderCanvasZoom.Value = 1;
             PrintDialog dlg = new PrintDialog();
 
             var result = dlg.ShowDialog();
@@ -331,9 +339,9 @@ namespace LabelCreator
             {
 
                 MainVM.MarginVisibility = Visibility.Collapsed;
-
+                
                 //var con = 0.254;
-                Size pageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
+                //Size pageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
                 //MainCanvas.Measure(pageSize);
                 MainCanvas.Arrange(new Rect(MainCanvas.DesiredSize));
                 //MainCanvas.Arrange(new Rect(0, 0, pageSize.Width, pageSize.Height));
@@ -462,7 +470,7 @@ namespace LabelCreator
             }
         }
 
-
+        
 
         private FrameworkElement GetCanvasComponentByName(string name)
         {
