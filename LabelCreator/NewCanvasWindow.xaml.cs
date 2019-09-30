@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace LabelCreator
 {
@@ -43,89 +44,7 @@ namespace LabelCreator
             {
                 NewCanvasVM.InstalledPrinters.Add(printer);
             }            
-        }
-
-        private void SetPrintersList2()
-        {
-            //var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-
-            //foreach (var printer in printerQuery.Get())
-            //{
-            //    var name = printer.GetPropertyValue("Name");
-            //    var status = printer.GetPropertyValue("Status");
-            //    var isDefault = printer.GetPropertyValue("Default");
-            //    var isNetworkPrinter = printer.GetPropertyValue("Network");
-
-            //    var str = $"{name}; (Status: {status}, Default: {isDefault}, Network: {isNetworkPrinter}";
-
-            //    ListBoxPrinters.Items.Add(str);
-            //}
-        }
-
-        private void Double_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            //var decimalseparator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-
-            //if (e.Text.Equals(",") || e.Text.Equals("."))
-            //{
-            //    var tb = sender as TextBox;
-
-            //    if (!tb.Text.Contains("."))
-            //    {
-            //        tb.Text += ".";
-            //        tb.SelectionStart = tb.Text.Length;
-            //    }
-
-            //    e.Handled = true;
-            //}
-
-            //string s1 = "12.34";
-            //string s2 = "15,75";
-
-            //var c1 = Convert.ToDecimal(s1, CultureInfo.InvariantCulture);
-            //var c2 = Convert.ToDecimal(s2, CultureInfo.InvariantCulture);
-
-            //var d1 = decimal.Parse(s1, CultureInfo.InvariantCulture);
-            //var d2 = decimal.Parse(s2, CultureInfo.InvariantCulture);
-
-            //Decimal dec = 85.0m;
-            //string s = dec.ToString(CultureInfo.InvariantCulture);
-            //decimal.Parse(s, CultureInfo.InvariantCulture);
-
-            //NumberFormatInfo nfi = NumberFormatInfo.CurrentInfo;
-            //Regex regex = new Regex(@"^[0-9]([\.\,][0-9]{1,3})?$");
-            //e.Handled = !regex.IsMatch((sender as TextBox).Text.Insert((sender as TextBox).SelectionStart, e.Text));
-
-            //bool approvedDecimalPoint = false;
-
-            //if (e.Text == decimalseparator)
-            //{
-            //    if (!((TextBox)sender).Text.Contains(decimalseparator))
-            //    {
-            //        approvedDecimalPoint = true;
-            //    }
-            //}
-
-            //if (!(char.IsDigit(e.Text[0]) || approvedDecimalPoint))
-            //{
-            //    e.Handled = true;
-            //}
-
-            //((TextBox)sender).Text = ((TextBox)sender).Text.Replace(" ", "");
-
-            if (!char.IsDigit(e.Text[0]))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if(sender is System.Windows.Controls.TextBox tb)
-            {
-                tb.SelectAll();
-            }
-        }
+        }        
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -152,6 +71,39 @@ namespace LabelCreator
         {
 
         }
-        
+
+
+        private void Double_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                // ZABEZPIECZENIE PRZED WPROWADZENIEM WIELU PRZECINKÓW
+                if (e.Text.Contains(",") || e.Text.Contains("."))
+                {
+                    if (tb.Text.Contains(",") || tb.Text.Contains("."))
+                    {
+                        e.Handled = true;
+                        return;
+                    }
+                }
+                e.Handled = !IsTextAllowedDot(e.Text);
+                return;
+            }
+            e.Handled = !IsTextAllowedDot(e.Text);
+        }
+
+        private Boolean IsTextAllowedDot(String text)
+        {
+            return Array.TrueForAll<Char>(text.ToCharArray(),
+                 delegate (Char c) { return Char.IsDigit(c) || Char.IsControl(c) || c == '.' || c == ','; });
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                tb.SelectAll();
+            }
+        }
     }
 }

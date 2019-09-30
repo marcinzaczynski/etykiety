@@ -1,4 +1,5 @@
 ﻿using LabelCreator.Helpers;
+using OwnBarcode;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace LabelCreator.ViewModel
 
         public static ToolTipMsg Message = new ToolTipMsg();
 
-        private int codeWidth = 150;
+        private int codeWidth = 220;
 
         public int CodeWidth
         {
@@ -29,7 +30,7 @@ namespace LabelCreator.ViewModel
             set { codeWidth = value; OnPropertyChanged("CodeWidth"); RefreshCode(); }
         }
 
-        private int codeHeight = 150;
+        private int codeHeight = 80;
 
         public int CodeHeight
         {
@@ -45,7 +46,7 @@ namespace LabelCreator.ViewModel
             set { codeMargin = value; OnPropertyChanged("CodeMargin"); RefreshCode(); }
         }
 
-        private string codeText = "1234567890123";
+        private string codeText = "111122223333";
 
         public string CodeText
         {
@@ -61,11 +62,13 @@ namespace LabelCreator.ViewModel
             set { pureCode = value; OnPropertyChanged("PureCode"); RefreshCode(); }
         }
 
-        public IEnumerable<BarcodeFormat> CodeFormatList { get; set; } = Enum.GetValues(typeof(BarcodeFormat)).Cast<BarcodeFormat>();
 
-        private BarcodeFormat selectedCodeFormat;
+        //BarcodeFormat
+        public IEnumerable<TYPE> CodeFormatList { get; set; } = Enum.GetValues(typeof(TYPE)).Cast<TYPE>();
 
-        public BarcodeFormat SelectedCodeFormat
+        private TYPE selectedCodeFormat;
+
+        public TYPE SelectedCodeFormat
         {
             get { return selectedCodeFormat; }
             set { selectedCodeFormat = value; OnPropertyChanged("SelectedCodeFormat"); RefreshCode(); }
@@ -98,9 +101,9 @@ namespace LabelCreator.ViewModel
                 {
                     if (!string.IsNullOrWhiteSpace(CodeText))
                     {
-                        ImgSource = BarcodeHandler.GenerateCode(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode, CodeMargin);
+                        //ImgSource = BarcodeHandler.GenerateCode(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode, CodeMargin);
 
-                        BarcodeHandler.BarcodeLib();
+                        ImgSource = BarcodeHandler.GenerateBarcode(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode);
                     }
                     else
                     {

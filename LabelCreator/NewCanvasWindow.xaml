@@ -8,7 +8,7 @@
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         Closed="Window_Closed"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" Width="330" Height="500" ResizeMode="NoResize">
+        Title="NewCanvasWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
 
     <Window.DataContext>
         <ViewModel:NewCanvasViewModel x:Name="NewCanvasVM"/>
@@ -39,21 +39,20 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250"/>
+            <RowDefinition />
             <RowDefinition Height="130"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Margin="5" Header="Zainstalowane drukarki:" Grid.Row="0" Grid.Column="0" Height="230">
-
+        <GroupBox Margin="5" Header="Zainstalowane drukarki:" Grid.Row="0" Grid.Column="0">
             <StackPanel>
                 <Label Content="Wybierz drukarkę:"/>
-                <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}"/>
+                <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
                 <Label Content="Wybierz papier:"/>
-                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="100"/>   
+                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="150"/>   
             </StackPanel>
         </GroupBox>
 
@@ -66,25 +65,28 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="2">
-                <Label Content="Wysokość:" Width="90" HorizontalContentAlignment="Right"/>
-                <TextBox Width="60" 
-                         Text="{Binding Height, Converter={StaticResource DoubleConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                         Style="{StaticResource DoubleFormat}"/>
-                <Label Content="mm"/>
-                <Label Content="{Binding HeightPx}" Width="35"/>
-                <Label Content="px"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Szerokość:" Width="90" HorizontalContentAlignment="Right"/>
-                <TextBox Width="60" 
-                         Text="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}}" 
+                <TextBox Width="60" MaxLength="5"
+                         Text="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}, ConverterParameter='5,1,Width'}" 
                          Style="{StaticResource DoubleFormat}"/>
                 <Label Content="mm"/>
-                <Label Content="{Binding WidthPx}" Width="35"/>
+                <Label Content="{Binding WidthPx}" Width="50" HorizontalContentAlignment="Right"/>
                 <Label Content="px"/>
+                <Label Content="{Binding WidthIn}" Width="50" HorizontalContentAlignment="Right"/>
+                <Label Content="in"/>
             </StackPanel>
-
+            
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <Label Content="Wysokość:" Width="90" HorizontalContentAlignment="Right"/>
+                <TextBox Width="60" MaxLength="5"
+                         Text="{Binding Height, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DoubleConverter}, ConverterParameter='5,1,Height'}" 
+                         Style="{StaticResource DoubleFormat}"/>
+                <Label Content="mm"/>
+                <Label Content="{Binding HeightPx}" Width="50" HorizontalContentAlignment="Right"/>
+                <Label Content="px"/>
+                <Label Content="{Binding HeightIn}" Width="50" HorizontalContentAlignment="Right"/>
+                <Label Content="in"/>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">

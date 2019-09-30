@@ -207,6 +207,7 @@ namespace LabelCreator
             {
                 ClearCanvas();
 
+
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
                 MainVM.CanvasHeight = cnw.NewCanvasVM.HeightPx;
                 MainVM.CanvasWidth = cnw.NewCanvasVM.WidthPx;
@@ -339,7 +340,7 @@ namespace LabelCreator
             {
 
                 MainVM.MarginVisibility = Visibility.Collapsed;
-                
+
                 //var con = 0.254;
                 //Size pageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
                 //MainCanvas.Measure(pageSize);

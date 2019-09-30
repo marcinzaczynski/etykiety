@@ -102,7 +102,7 @@
                 </Label>
             </StackPanel>
             <StackPanel>
-                <Label Content="{Binding TextHint}" FontSize="10" Foreground="Red" Width="auto"/>
+                <TextBlock Text="{Binding TextHint}" FontSize="12" Foreground="Red" Width="400" TextWrapping="Wrap" />
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -19,6 +19,10 @@ namespace LabelCreator.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        private const double dpi = 96;                  // 1 in = 96 pixel 
+        private const double inConst = 25.4;            // 1 in = 25.4 mm 
+        private const double mmConst = 0.03937007874;   // 1 mm = 0.03937007874 in
+
         public NewCanvasViewModel()
         {
 
@@ -47,20 +51,18 @@ namespace LabelCreator.ViewModel
             set { selectedPrinter = value; OnPropertyChanged("SelectedPrinter"); LoadLabels(); }
         }
 
-
-
         private double width;
         public double Width
         {
             get { return width; }
-            set { width = value; OnPropertyChanged("Width"); }
+            set { width = Math.Round(value); OnPropertyChanged("Width"); WidthPx = mmToPx(value); WidthIn = mmToIn(value); }
         }
 
         private double height;
         public double Height
         {
             get { return height; }
-            set { height = value; OnPropertyChanged("Height"); }
+            set { height = Math.Round(value); OnPropertyChanged("Height"); HeightPx = mmToPx(value); HeightIn = mmToIn(value); }
         }
 
         private double widthPx;
@@ -68,7 +70,7 @@ namespace LabelCreator.ViewModel
         public double WidthPx
         {
             get { return widthPx; }
-            set { widthPx = value; OnPropertyChanged("WidthPx"); }
+            set { widthPx = Math.Round(value, 2); OnPropertyChanged("WidthPx"); }
         }
 
         private double heightPx;
@@ -76,7 +78,23 @@ namespace LabelCreator.ViewModel
         public double HeightPx
         {
             get { return heightPx; }
-            set { heightPx = value; OnPropertyChanged("HeightPx"); }
+            set { heightPx = Math.Round(value, 2); OnPropertyChanged("HeightPx"); }
+        }
+
+        private double widthIn;
+
+        public double WidthIn
+        {
+            get { return widthIn; }
+            set { widthIn = Math.Round(value, 1); OnPropertyChanged("WidthIn"); }
+        }
+
+        private double heightIn;
+
+        public double HeightIn
+        {
+            get { return heightIn; }
+            set { heightIn = Math.Round(value, 1); OnPropertyChanged("HeightIn"); }
         }
 
 
@@ -96,44 +114,24 @@ namespace LabelCreator.ViewModel
             set { selectedPaperSizes = value; OnPropertyChanged("SelectedPaperSizes"); SetCanvasSize(value); }
         }
 
-        private int Resolution;
-
         private void LoadLabels()
         {
             var printerSettings = PrinterHandler.GetPrinterSettings(SelectedPrinter);
 
             PaperSizes = printerSettings.PaperSizes;
-
-            ;
-
-            var maxResolution = printerSettings.PrinterResolutions.OfType<PrinterResolution>()
-                                         .OrderByDescending(r => r.X)
-                                         .ThenByDescending(r => r.Y)
-                                         .First();
-
-            Resolution = maxResolution.X;
-
         }
 
         private void SetCanvasSize(PaperSize paperSize)
         {
             if (paperSize != null)
-            {
-                var pixelsW = paperSize.Width;
-                var pixelsH = paperSize.Height;
+            {               
+                FileName = paperSize.PaperName;    
 
-                //var dpi = 11.8;
-                var con = 0.254;
+                var inW = paperSize.Width / 100.0;
+                var inH = paperSize.Height / 100.0;
 
-                var w = pixelsW * con; /// dpi;
-                var h = pixelsH * con; // / dpi;
-
-                FileName = paperSize.PaperName;
-                Width = TruncateDecimal(w, 1);
-                Height = TruncateDecimal(h, 1);
-
-                WidthPx = pixelsW;
-                HeightPx = pixelsH;
+                Width = inToMm(inW);
+                Height = inToMm(inH);
             }
         }
 
@@ -144,6 +142,19 @@ namespace LabelCreator.ViewModel
             return tmp / step;
         }
 
+        private double mmToPx(double mmVal)
+        {
+            return mmToIn(mmVal) * dpi;
+        }
 
+        private double mmToIn(double mmVal)
+        {
+            return mmVal * mmConst;
+        }
+
+        private double inToMm(double inVal)
+        {
+            return inVal * inConst;
+        }
     }
 }

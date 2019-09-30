@@ -31,17 +31,20 @@ namespace LabelCreator
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-
+            if(NewBarcodeVM.ImgSource != null)
+            {
+                e.CanExecute = true;
+            }
         }
 
         private void CommanCancel_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            Close();
         }
 
         private void CommandCancel_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-
+            e.CanExecute = true;
         }
     }
 }
