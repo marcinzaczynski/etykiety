@@ -39,9 +39,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="300"/>
             <RowDefinition Height="100"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350"/>
@@ -52,7 +52,7 @@
                 <Label Content="Wybierz drukarkę:"/>
                 <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
                 <Label Content="Wybierz papier:"/>
-                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="150"/>   
+                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="175"/>   
             </StackPanel>
         </GroupBox>
 

@@ -41,7 +41,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250"/>
+            <RowDefinition Height="280"/>
             <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -52,9 +52,12 @@
         <GroupBox Grid.Row="0" Grid.Column="0" Margin="5" Header="Generowanie kodu">
             <StackPanel>
                 <StackPanel Style="{StaticResource StackPanelRow}">
+                    <Label Style="{StaticResource LabelWidth}" Content="Nazwa:"/>
+                    <TextBox Text="{Binding CodeName, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center" MaxLength="20"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelRow}">
                     <Label Style="{StaticResource LabelWidth}" Content="Typ:"/>
                     <ComboBox ItemsSource="{Binding CodeFormatList}" SelectedItem="{Binding SelectedCodeFormat}" Width="150"/>
-                    <!--<Label ToolTip="{Binding}"/>-->
                 </StackPanel>
                 <StackPanel Style="{StaticResource StackPanelRow}">
                     <Label Style="{StaticResource LabelWidth}" Content="Tekst:"/>
@@ -79,10 +82,10 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd">
-            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+        <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd" >
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Name="spPrev">
                 <Border BorderThickness="1" BorderBrush="Black">
-                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left"/>
+                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left" Name="Img"/>
                 </Border>
             </StackPanel>
 

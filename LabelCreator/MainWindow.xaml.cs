@@ -46,10 +46,13 @@ namespace LabelCreator
             InitializeComponent();
 
             NewTextWindow.NewTextEvent += new AddNewComponent(AddComponentToCanvas);
-            NewTextWindow.EditEvent += new EditComponent(EditComponent);
+            NewTextWindow.EditTextEvent += new EditComponent(EditComponent);
 
             NewImageWindow.NewImageEvent += new AddNewComponent(AddComponentToCanvas);
-            NewImageWindow.EditEvent += new EditComponent(EditComponent);
+            NewImageWindow.EditImageEvent += new EditComponent(EditComponent);
+
+            NewBarcodeWindow.NewBarcodeEvent += new AddNewComponent(AddComponentToCanvas);
+            NewBarcodeWindow.EditBarcodeEvent += new EditComponent(EditComponent);
 
             // Setting the MouseMove event for our parent control(In this case it is DesigningCanvas).
             PreviewMouseMove += this.MouseMove;
@@ -88,6 +91,7 @@ namespace LabelCreator
             // Sprawdzenie czy canvas zawiera już komponent o takiej samej nazwie
             //var controlExist = MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == control.Name).FirstOrDefault();
 
+            // Jeśli edytujemy komponent to nie dodajemy go do lewego menu - on tam już jest.
             if (!edit)
             {
                 if (control is Label lbl)
@@ -95,8 +99,12 @@ namespace LabelCreator
                     TreeViewItemTextsRoot.Items.Add(lbl.Name);
                     TreeViewItemTextsRoot.IsExpanded = true;
                 }
-
-                if (control is Image img)
+                else if (control is BarcodeControl bcc)
+                {
+                    TreeViewItemBarcodeRoot.Items.Add(bcc.Name);
+                    TreeViewItemBarcodeRoot.IsExpanded = true;
+                }
+                else if (control is Image img)
                 {
                     TreeViewItemImageFromFileRoot.Items.Add(img.Name);
                     TreeViewItemImageFromFileRoot.IsExpanded = true;
@@ -117,25 +125,26 @@ namespace LabelCreator
 
         private void EditComponent(FrameworkElement control)
         {
-            if (control.DataContext is NewTextViewModel vm)
+            //if (control.DataContext is NewTextViewModel vm)
+            //{
+            //}
+
+            var componentToEdit = GetCanvasComponentByName(control.Name);
+
+            if (componentToEdit != null)
             {
-                var componentToEdit = GetCanvasComponentByName(vm.Name);
+                double tmpLeft = Canvas.GetLeft(componentToEdit);
+                double tmpTop = Canvas.GetTop(componentToEdit);
 
-                if (componentToEdit != null)
-                {
-                    double tmpLeft = Canvas.GetLeft(componentToEdit);
-                    double tmpTop = Canvas.GetTop(componentToEdit);
+                ComponentList.Remove(componentToEdit);
+                MainCanvas.Children.Remove(componentToEdit);
 
-                    ComponentList.Remove(componentToEdit);
-                    MainCanvas.Children.Remove(componentToEdit);
+                AddComponentToCanvas(control, tmpLeft, tmpTop, true);
 
-                    AddComponentToCanvas(control, tmpLeft, tmpTop, true);
+                //MainCanvas.Children.Add(control);
 
-                    //MainCanvas.Children.Add(control);
-
-                    //Canvas.SetTop(control, tmpTop);
-                    //Canvas.SetLeft(control, tmpLeft);
-                }
+                //Canvas.SetTop(control, tmpTop);
+                //Canvas.SetLeft(control, tmpLeft);
             }
         }
 
@@ -261,6 +270,9 @@ namespace LabelCreator
             try
             {
                 SliderCanvasZoom.Value = 1;
+
+                // jeśli są dodane kody to trzeba je zapisać na dysku 
+
                 AppHandler.SaveCanvas(MainCanvas);
             }
             catch (Exception ex)
@@ -275,16 +287,15 @@ namespace LabelCreator
 
             if (currentComponent is Label lbl)
             {
-                NewTextWindow newTextWindow = new NewTextWindow(lbl);
-
-                newTextWindow.ShowDialog();
+                var result = new NewTextWindow(lbl).ShowDialog();
             }
-
-            if (currentComponent is Image img)
+            else if (currentComponent is BarcodeControl bcc)
             {
-                NewImageWindow newImageWindow = new NewImageWindow();
-
-                newImageWindow.ShowDialog();
+                var result = new NewBarcodeWindow(bcc).ShowDialog();
+            }
+            else if (currentComponent is Image img)
+            {
+                var result = new NewImageWindow().ShowDialog();
             }
         }
 
@@ -364,7 +375,9 @@ namespace LabelCreator
             Environment.Exit(0);
         }
 
-        #endregion 
+        #endregion
+
+        #region ZOOM AND SLIDER
 
         private void DesigningCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -410,15 +423,20 @@ namespace LabelCreator
             }
         }
 
+        #endregion
 
         private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ShowClickedControlInfo(sender);
             //In this event, we get current mouse position on the control to use it in the MouseMove event.
-            FirstXPos = e.GetPosition(sender as Control).X;
-            FirstYPos = e.GetPosition(sender as Control).Y;
-            FirstArrowXPos = e.GetPosition(MainCanvas).X - FirstXPos;
-            FirstArrowYPos = e.GetPosition(MainCanvas).Y - FirstYPos;
+            var currentComponentPosition = e.GetPosition(sender as FrameworkElement);
+            FirstXPos = currentComponentPosition.X;
+            FirstYPos = currentComponentPosition.Y;
+
+            //var mainCanvasPosition = e.GetPosition(MainCanvas);
+            //FirstArrowXPos = mainCanvasPosition.X - FirstXPos;
+            //FirstArrowYPos = mainCanvasPosition.Y - FirstYPos;
+
             MovingObject = sender;
         }
 
@@ -435,6 +453,11 @@ namespace LabelCreator
                 {
                     MainVM.CurrentComponentName = ivm.Name;
                 }
+
+                if (fe is BarcodeControl bcc)
+                {
+                    MainVM.CurrentComponentName = bcc.Name;
+                }
             }
         }
 
@@ -445,33 +468,78 @@ namespace LabelCreator
             {
                 if (MovingObject is FrameworkElement tmp)
                 {
-                    var tmpParent = tmp.Parent as FrameworkElement;
+                    bool isMargin = false;
+                    if (tmp.Name.Contains("Margin")) isMargin = true ;
 
-                    var xNewPosition = e.GetPosition(tmpParent).X - FirstXPos;
-                    var yNewPosition = e.GetPosition(tmpParent).Y - FirstYPos;
+                    var mainCanvasPos = e.GetPosition(MainCanvas);
 
-                    var lMarginPos = tmp.Name.Contains("MarginL") ? 0 : (double)MarginL.GetValue(Canvas.LeftProperty);
-                    var rMarginPos = tmp.Name.Contains("MarginR") ? MainCanvas.ActualWidth : (double)MarginR.GetValue(Canvas.LeftProperty);
+                    var xNewPosition = mainCanvasPos.X - FirstXPos;
+                    var yNewPosition = mainCanvasPos.Y - FirstYPos;
 
-                    // PRZESÓWANIE PO OSI X - LEWO, PRAWO - OGRANICZENIE DO ROZMIARÓW CANVASA LUB MARGINESÓW
-                    if (xNewPosition > lMarginPos && xNewPosition + tmp.ActualWidth < rMarginPos)
+                    var lMargin = tmp.Name.Contains("MarginL");
+                    var rMargin = tmp.Name.Contains("MarginR");
+                    var tMargin = tmp.Name.Contains("MarginT");
+                    var bMargin = tmp.Name.Contains("MarginB");
+
+                    // JEŚLI PRZESÓWAMY MARGINESY TO SideLimit = POZYCJE MARGINESU W PRZECIWNYM WYPADKU SideLimit = POZYCJE BOCZNE CANVASU
+                    var LSideLimit = lMargin ? 0 : (double)MarginL.GetValue(Canvas.LeftProperty);
+                    var RSideLimit = rMargin ? MainCanvas.ActualWidth : (double)MarginR.GetValue(Canvas.LeftProperty);
+
+                    var TopLimit = tMargin ? 0 : (double)MarginT.GetValue(Canvas.TopProperty);
+                    var BotLimit = bMargin ? MainCanvas.ActualHeight : (double)MarginB.GetValue(Canvas.TopProperty);
+
+                    if(MainVM.HiedeMargins)
                     {
-                        tmp.SetValue(Canvas.LeftProperty, xNewPosition);
+                        LSideLimit = 0;
+                        RSideLimit = MainCanvas.ActualWidth;
+                        TopLimit = 0;
+                        BotLimit = MainCanvas.ActualHeight;
                     }
 
-                    var tMarginPos = tmp.Name.Contains("MarginT") ? 0 : (double)MarginT.GetValue(Canvas.TopProperty);
-                    var bMarginPos = tmp.Name.Contains("MarginB") ? MainCanvas.ActualHeight : (double)MarginB.GetValue(Canvas.TopProperty);
+                    // PRZESÓWANIE PO OSI X - LEWO, PRAWO - OGRANICZENIE DO ROZMIARÓW CANVASA LUB MARGINESÓW
+                    if (xNewPosition >= LSideLimit)
+                    {
+                        if (xNewPosition + tmp.ActualWidth <= RSideLimit)
+                        {
+                            // PRZESUNIĘCIE KOMPONENTU W POZIOMIE ZGODNIE Z RUCHEM MYSZKI
+                            tmp.SetValue(Canvas.LeftProperty, xNewPosition);
+                        }
+                        else
+                        {
+                            // POPRAWIA PROBLEM NIEDOCIĄGNIĘCIA KOMPONENTU DO PRAWEGO MARGINESU PRZY SZYBKIM PRZESUNIĘCIU MYSZKĄ
+                            if (tMargin || bMargin) ; else tmp.SetValue(Canvas.LeftProperty, RSideLimit - tmp.ActualWidth);
+                        }
+                    }
+                    else
+                    {
+                        // POPRAWIA PROBLEM NIEDOCIĄGNIĘCIA KOMPONENTU DO LEWWEGO MARGINESU PRZY SZYBKIM PRZESUNIĘCIU MYSZKĄ
+                        if (tMargin || bMargin) ; else tmp.SetValue(Canvas.LeftProperty, LSideLimit);
+                    }
 
                     // PRZESÓWANIE PO OSI Y - GÓRA, DÓŁ - OGRANICZENIE DO ROZMIARÓW CANVASA LUB MARGINESÓW 
-                    if (yNewPosition > tMarginPos && yNewPosition + tmp.ActualHeight < bMarginPos)
+                    if (yNewPosition >= TopLimit)
                     {
-                        tmp.SetValue(Canvas.TopProperty, yNewPosition);
+                        if (yNewPosition + tmp.ActualHeight <= BotLimit)
+                        {
+                            // PRZESUNIĘCIE KOMPONENTU W PIONIE ZGODNIE Z RUCHEM MYSZKI
+                            tmp.SetValue(Canvas.TopProperty, yNewPosition);
+                        }
+                        else
+                        {
+                            if (isMargin) return;
+                            // POPRAWIENIE DOCIĄGNIĘCIA DO DOLNEGO MARGINESU
+                            tmp.SetValue(Canvas.TopProperty, BotLimit - tmp.ActualHeight);
+                        }
+                    }
+                    else
+                    {
+                        if (isMargin) return;
+                        // POPRAWIENIE DOCIĄGNIĘCIA DO GÓRNEGO MARGINESU
+                        tmp.SetValue(Canvas.TopProperty, TopLimit);
                     }
                 }
             }
         }
-
-        
 
         private FrameworkElement GetCanvasComponentByName(string name)
         {

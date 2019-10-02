@@ -26,7 +26,7 @@ namespace LabelCreator
     public partial class NewTextWindow : Window
     {
         public static event AddNewComponent NewTextEvent;
-        public static event EditComponent EditEvent;
+        public static event EditComponent EditTextEvent;
 
         public Label NewText;
         public TextBlock NewTextBlock;
@@ -67,7 +67,7 @@ namespace LabelCreator
             {
                 //NewTextVM.
 
-                EditEvent?.Invoke(NewText);
+                EditTextEvent?.Invoke(NewText);
             }
             else
             {

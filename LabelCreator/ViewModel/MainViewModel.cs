@@ -126,6 +126,30 @@ namespace LabelCreator.ViewModel
             set { marginVisibility = value; OnPropertyChanged("MarginVisibility"); }
         }
 
+        private bool hideMargins;
+
+        public bool HiedeMargins
+        {
+            get { return hideMargins; }
+            set
+            {
+                hideMargins = value;
+                OnPropertyChanged("HiedeMargins");
+                switch (value)
+                {
+                    case true:
+                        MarginVisibility = Visibility.Collapsed;
+                        break;
+                    case false:
+                        MarginVisibility = Visibility.Visible;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
 
         // PRZESUNIĘCIE MARGINESÓW POZA CANVAS
         private double marginOffsetSize = MarginOffsetSizeField;

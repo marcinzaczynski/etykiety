@@ -20,7 +20,7 @@ namespace LabelCreator
     public partial class NewImageWindow : Window
     {
         public static event AddNewComponent NewImageEvent;
-        public static event EditComponent EditEvent;
+        public static event EditComponent EditImageEvent;
 
         public NewImageWindow(Image img = null)
         {

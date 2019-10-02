@@ -13,6 +13,7 @@ namespace LabelCreator.ViewModel
 {
     class NewBarcodeViewModel : INotifyPropertyChanged
     {
+        #region PROPERTY CHANGE
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -20,69 +21,153 @@ namespace LabelCreator.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public static ToolTipMsg Message = new ToolTipMsg();
+        #endregion
 
-        private int codeWidth = 220;
+        private BitmapImage imgSource;
 
-        public int CodeWidth
-        {
-            get { return codeWidth; }
-            set { codeWidth = value; OnPropertyChanged("CodeWidth"); RefreshCode(); }
-        }
+        private TYPE selectedCodeFormat = TYPE.EAN13;
 
-        private int codeHeight = 80;
-
-        public int CodeHeight
-        {
-            get { return codeHeight; }
-            set { codeHeight = value; OnPropertyChanged("CodeHeight"); RefreshCode(); }
-        }
+        private double codeWidth = 220;
+        private double codeHeight = 80;
 
         private int codeMargin = 6;
+
+        private string codeName = "TstBcc";
+        private string codeText = "111122223333";
+        private string textHint = "";
+
+        private bool pureCode = false;
+
+
+        public NewBarcodeViewModel()
+        {
+            BarcodeTmp = new BarcodeControl()
+            {
+                Name = CodeName,
+                Width = CodeWidth,
+                Height = CodeHeight,
+                CodeMargin = CodeMargin,
+                CodeText = CodeText,
+                PureCode = PureCode,
+                Source = ImgSource,
+                CodeType = selectedCodeFormat,
+            };
+
+            RefreshCode();
+        }
+        
+        /// <summary>
+        /// Obiekt pomocniczy, który zostaje zwrócony do okna głównego.
+        /// </summary>
+        public BarcodeControl BarcodeTmp;
+
+        /// <summary>
+        /// Ustawienie wszystkich właściwości z obiektu przysłanego z okna głównego
+        /// </summary>
+        /// <param name="barocdeTmp"></param>
+        internal void SetBarcodeTmp(BarcodeControl barocdeTmp)
+        {
+            CodeName = barocdeTmp.Name;
+            CodeWidth = barocdeTmp.Width;
+            CodeHeight = barocdeTmp.Height;
+            CodeMargin = barocdeTmp.CodeMargin;
+            CodeText = barocdeTmp.CodeText;
+            PureCode = barocdeTmp.PureCode;
+            ImgSource = (BitmapImage)barocdeTmp.Source;
+            SelectedCodeFormat = barocdeTmp.CodeType;
+        }
+
+        /// <summary>
+        /// Źródło danych dla kodu.
+        /// </summary>
+        public BitmapImage ImgSource
+        {
+            get { return imgSource; }
+            set
+            {
+                imgSource = value;
+                BarcodeTmp.Source = value;
+                OnPropertyChanged("ImgSource");
+            }
+        }
+
+        public string CodeName
+        {
+            get { return codeName; }
+            set
+            {
+                codeName = value;
+                BarcodeTmp.Name = value;
+                OnPropertyChanged("ImgSource");
+            }
+        }
+
+        /// <summary>
+        /// Szerokość kodu
+        /// </summary>
+        public double CodeWidth
+        {
+            get { return codeWidth; }
+            set
+            {
+                codeWidth = value;
+                BarcodeTmp.Width = value;
+                OnPropertyChanged("CodeWidth");
+                RefreshCode();
+            }
+        }    
+
+        /// <summary>
+        /// Wysokość kodu.
+        /// </summary>
+        public double CodeHeight
+        {
+            get { return codeHeight; }
+            set
+            {
+                codeHeight = value;
+                BarcodeTmp.Height = value;
+                OnPropertyChanged("CodeHeight");
+                RefreshCode();
+            }
+        }        
 
         public int CodeMargin
         {
             get { return codeMargin; }
-            set { codeMargin = value; OnPropertyChanged("CodeMargin"); RefreshCode(); }
-        }
-
-        private string codeText = "111122223333";
+            set
+            {
+                codeMargin = value;
+                BarcodeTmp.CodeMargin = value;
+                OnPropertyChanged("CodeMargin");
+                RefreshCode();
+            }
+        }        
 
         public string CodeText
         {
             get { return codeText; }
-            set { codeText = value; OnPropertyChanged("CodeText"); RefreshCode(); }
-        }
-
-        private bool pureCode =false;
+            set
+            {
+                codeText = value;
+                BarcodeTmp.CodeText = value;
+                OnPropertyChanged("CodeText");
+                RefreshCode();
+            }
+        }        
 
         public bool PureCode
         {
             get { return pureCode; }
-            set { pureCode = value; OnPropertyChanged("PureCode"); RefreshCode(); }
+            set
+            {
+                pureCode = value;
+                BarcodeTmp.PureCode = value;
+                OnPropertyChanged("PureCode");
+                RefreshCode();
+            }
         }
 
-
-        //BarcodeFormat
-        public IEnumerable<TYPE> CodeFormatList { get; set; } = Enum.GetValues(typeof(TYPE)).Cast<TYPE>();
-
-        private TYPE selectedCodeFormat;
-
-        public TYPE SelectedCodeFormat
-        {
-            get { return selectedCodeFormat; }
-            set { selectedCodeFormat = value; OnPropertyChanged("SelectedCodeFormat"); RefreshCode(); }
-        }
-
-        private BitmapImage imgSource;
-
-        public BitmapImage ImgSource
-        {
-            get { return imgSource; }
-            set { imgSource = value; OnPropertyChanged("ImgSource"); }
-        }
-
-        private string textHint = "";
 
         public string TextHint
         {
@@ -90,6 +175,24 @@ namespace LabelCreator.ViewModel
             set { textHint = value; OnPropertyChanged("TextHint"); }
         }
 
+        //BarcodeFormat
+        public IEnumerable<TYPE> CodeFormatList { get; set; } = Enum.GetValues(typeof(TYPE)).Cast<TYPE>();        
+
+        public TYPE SelectedCodeFormat
+        {
+            get { return selectedCodeFormat; }
+            set
+            {
+                selectedCodeFormat = value;
+                BarcodeTmp.CodeType = value;
+                OnPropertyChanged("SelectedCodeFormat");
+                RefreshCode();
+            }
+        }
+
+               
+
+        
 
         private void RefreshCode()
         {
@@ -121,6 +224,8 @@ namespace LabelCreator.ViewModel
                 TextHint = ex.Message;
             }
         }
+
+        public static ToolTipMsg Message = new ToolTipMsg();
     }
 
     public class ToolTipMsg

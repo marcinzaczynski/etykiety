@@ -15,6 +15,11 @@ using ZXing.Rendering;
 
 namespace LabelCreator.Helpers
 {
+    public enum BarcodeTypes
+    {
+
+    }
+
     public class BarcodeHandler
     {
         public static BitmapImage GenerateCode(BarcodeFormat codeFormat, string codeText, int width, int height, bool pureCode, int margin = 6)
@@ -58,13 +63,13 @@ namespace LabelCreator.Helpers
         }
 
 
-        public static BitmapImage GenerateBarcode(TYPE codeType, string codeText, int width, int height, bool pureCode)
+        public static BitmapImage GenerateBarcode(TYPE codeType, string codeText, double width, double height, bool pureCode)
         {
             Barcode b = new Barcode();
 
             b.IncludeLabel = !pureCode;
 
-            return ImgToBitmap(b.Encode(codeType, codeText, width, height));
+            return ImgToBitmap(b.Encode(codeType, codeText, (int)width, (int)height));
         }
 
         private static BitmapImage ImgToBitmap(Image img)

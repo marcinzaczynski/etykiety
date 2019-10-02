@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\BarcodeControl.cs" />
     <Compile Include="Helpers\BarcodeHandler.cs" />
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\FileOpen.cs" />

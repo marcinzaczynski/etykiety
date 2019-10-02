@@ -27,7 +27,7 @@ namespace LabelCreator.ViewModel
         public string Name
         {
             get { return name; }
-            set { name = value; OnPropertyChanged("Name"); TmpImage.Name = value.ToString(); }
+            set { name = value; OnPropertyChanged("Name"); TmpImage.Name = value; }
         }
 
         private string imgageSource;
@@ -41,12 +41,12 @@ namespace LabelCreator.ViewModel
 
 
         public bool LoadImage()
-        {
+        {            
             var imgSrc = AppHandler.LoadImage();
 
             if(imgSrc != null)
             {
-                Name = Path.GetFileNameWithoutExtension(imgSrc);
+                Name = $"IMG_{Path.GetFileName(imgSrc)}".Replace(".","_");
                 ImageSource = imgSrc;
                 return true;
             }

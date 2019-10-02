@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabelCreator.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,34 @@ namespace LabelCreator
     /// </summary>
     public partial class NewBarcodeWindow : Window
     {
-        public NewBarcodeWindow()
+        public static event AddNewComponent NewBarcodeEvent;
+        public static event EditComponent EditBarcodeEvent;
+
+        private bool EditMode = false;
+
+        public NewBarcodeWindow(BarcodeControl barcodeToEdit = null)
         {
             InitializeComponent();
+
+            if(barcodeToEdit != null)
+            {
+                EditMode = true;
+                NewBarcodeVM.SetBarcodeTmp(barcodeToEdit);
+            }
         }
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            if(EditMode)
+            {
+                EditBarcodeEvent?.Invoke(NewBarcodeVM.BarcodeTmp);
+            }
+            else
+            {
+                NewBarcodeEvent?.Invoke(NewBarcodeVM.BarcodeTmp, 2, 2, false);
+            }
 
+            Close();
         }
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)

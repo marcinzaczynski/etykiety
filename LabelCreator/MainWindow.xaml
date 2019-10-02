@@ -97,7 +97,9 @@
                 <Separator/>
                 <MenuItem Header="Zamknij" Command="helpers:CommandHandler.Exit"/>
             </MenuItem>
-            <MenuItem Header="Program"/>
+            <MenuItem Header="Program">
+                <MenuItem Header="Ukryj marginesy" IsCheckable="True" IsChecked="{Binding HiedeMargins}"/>
+            </MenuItem>
         </Menu>
 
         <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" Background="#FFF3F3F3">
@@ -113,8 +115,8 @@
                     <TreeViewItem Header="{Binding FileName}" IsExpanded="True">
                         <TreeViewItem Name="TreeViewItemTextsRoot" Header="Tekst" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemTextsFromDbRoot" Header="Tekst z bazy" HorizontalAlignment="Left" />
-                        <TreeViewItem Name="TreeViewItemImageFromFileRoot" Header="Obrazek z pliku" HorizontalAlignment="Left" />
-                        <TreeViewItem Name="TreeViewItemImageFromDbRoot" Header="Obrazek z bazy" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemImageFromFileRoot" Header="Obraz" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemImageFromDbRoot" Header="Obraz z bazy" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemBarcodeRoot" Header="Kod kreskowy" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemBarcodeFromDbRoot" Header="Kod kreskowy z bazy" HorizontalAlignment="Left" />
                     </TreeViewItem>
@@ -123,18 +125,16 @@
         </ScrollViewer>
 
         <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
-            <GroupBox Header="Obszar roboczy" Padding="10">
+            <GroupBox Header="Obszar roboczy" Padding="10" Name="WorkspaceFrame">
                 <!--<helpers:FunkyBorder BorderBrush="Red" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp">-->
-
-
                 <Canvas x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2">
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform" />
                     </Canvas.LayoutTransform>
-                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="1" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="1" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="1" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="1" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </Canvas>
                 <!--</helpers:FunkyBorder>-->
             </GroupBox>
