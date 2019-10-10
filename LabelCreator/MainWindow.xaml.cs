@@ -18,7 +18,7 @@ using LabelCreator.ViewModel;
 
 namespace LabelCreator
 {
-    public delegate void AddNewComponent(FrameworkElement newElement, double left, double top, bool edit);
+    public delegate void AddNewComponent(FrameworkElement newElement, double left, double top, bool edit = false);
     public delegate void EditComponent(FrameworkElement element);
 
     /// <summary>
@@ -203,7 +203,6 @@ namespace LabelCreator
             //marginBottom.Cursor = Cursors.SizeNS;
         }
 
-
         #region COMMAND
 
         private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
@@ -215,7 +214,6 @@ namespace LabelCreator
             if (cnw.WindowResult)
             {
                 ClearCanvas();
-
 
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
                 MainVM.CanvasHeight = cnw.NewCanvasVM.HeightPx;
@@ -271,7 +269,12 @@ namespace LabelCreator
             {
                 SliderCanvasZoom.Value = 1;
 
-                // jeśli są dodane kody to trzeba je zapisać na dysku 
+                var codes = GetCanvasComponents<BarcodeControl>();
+
+                foreach (var code in codes)
+                {
+                    //BarcodeHandler.BitmapToFile(code.Source, code.CodeType.ToString());
+                }
 
                 AppHandler.SaveCanvas(MainCanvas);
             }
@@ -546,6 +549,11 @@ namespace LabelCreator
             //return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.DataContext is NewTextViewModel).ToList().Where(cc => ((NewTextViewModel)cc.DataContext).Name == name).FirstOrDefault();
 
             return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == name).FirstOrDefault();
+        }
+
+        private List<T> GetCanvasComponents<T>() where T : FrameworkElement
+        {
+            return MainCanvas.Children.OfType<T>().ToList();
         }
 
         private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)

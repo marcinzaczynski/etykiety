@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZXing;
 
@@ -23,7 +24,7 @@ namespace LabelCreator.ViewModel
 
         #endregion
 
-        private BitmapImage imgSource;
+        private ImageSource imgSource;
 
         private TYPE selectedCodeFormat = TYPE.EAN13;
 
@@ -38,7 +39,9 @@ namespace LabelCreator.ViewModel
 
         private bool pureCode = false;
 
-
+        /// <summary>
+        /// konstruktor ustawiający parametry obiektu tymczasowego, który zostanie zwrócony do okna głównego
+        /// </summary>
         public NewBarcodeViewModel()
         {
             BarcodeTmp = new BarcodeControl()
@@ -73,14 +76,14 @@ namespace LabelCreator.ViewModel
             CodeMargin = barocdeTmp.CodeMargin;
             CodeText = barocdeTmp.CodeText;
             PureCode = barocdeTmp.PureCode;
-            ImgSource = (BitmapImage)barocdeTmp.Source;
+            ImgSource = barocdeTmp.Source;
             SelectedCodeFormat = barocdeTmp.CodeType;
         }
 
         /// <summary>
         /// Źródło danych dla kodu.
         /// </summary>
-        public BitmapImage ImgSource
+        public ImageSource ImgSource
         {
             get { return imgSource; }
             set
@@ -98,7 +101,7 @@ namespace LabelCreator.ViewModel
             {
                 codeName = value;
                 BarcodeTmp.Name = value;
-                OnPropertyChanged("ImgSource");
+                OnPropertyChanged("CodeName");
             }
         }
 
@@ -190,10 +193,6 @@ namespace LabelCreator.ViewModel
             }
         }
 
-               
-
-        
-
         private void RefreshCode()
         {
             try
@@ -223,6 +222,14 @@ namespace LabelCreator.ViewModel
                 ImgSource = null;
                 TextHint = ex.Message;
             }
+        }
+
+        internal void SaveCodeToFile()
+        {
+            var dateStamp = DateTime.Now.ToString("yyyyMMddHHmm");
+            var fileName = $"{SelectedCodeFormat.ToString()}-{CodeText}";//-{dateStamp}
+
+            ImgSource = new ImageSourceConverter().ConvertFromString(BarcodeHandler.BitmapToFile((BitmapImage)ImgSource, fileName)) as ImageSource;
         }
 
         public static ToolTipMsg Message = new ToolTipMsg();

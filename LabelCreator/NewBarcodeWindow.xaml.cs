@@ -38,13 +38,15 @@ namespace LabelCreator
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            NewBarcodeVM.SaveCodeToFile();
+
             if(EditMode)
             {
                 EditBarcodeEvent?.Invoke(NewBarcodeVM.BarcodeTmp);
             }
             else
             {
-                NewBarcodeEvent?.Invoke(NewBarcodeVM.BarcodeTmp, 2, 2, false);
+                NewBarcodeEvent?.Invoke(NewBarcodeVM.BarcodeTmp, 2, 2);
             }
 
             Close();

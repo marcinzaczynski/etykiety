@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -22,6 +23,25 @@ namespace LabelCreator.Helpers
 
     public class BarcodeHandler
     {
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
+        public static string SavedCodesDirectory
+        {
+            get
+            {
+                return Path.Combine(AssemblyDirectory, "SavedCodes");
+            }
+        }
+
         public static BitmapImage GenerateCode(BarcodeFormat codeFormat, string codeText, int width, int height, bool pureCode, int margin = 6)
         {
             var barcodeWriter = new BarcodeWriter
@@ -87,6 +107,28 @@ namespace LabelCreator.Helpers
 
                 return bitmapImage;
             }
+        }
+
+        public static string BitmapToFile(BitmapImage image, string fileName)
+        {
+            string filePath = Path.Combine(SavedCodesDirectory);
+
+            if(!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            filePath = Path.Combine(filePath, fileName + ".png");
+
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                encoder.Save(fileStream);
+            }
+
+            return filePath;
         }
     }
 }
