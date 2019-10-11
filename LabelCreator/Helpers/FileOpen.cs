@@ -1,5 +1,6 @@
 ﻿using LabelCreator.ViewModel;
 using Microsoft.Win32;
+using OwnBarcode;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
@@ -67,6 +69,7 @@ namespace LabelCreator.Helpers
 
                     GetLabels(canvas, lm.Components);
                     GetImages(canvas, lm.Components);
+                    GetBarcodes(canvas, lm.Components);
 
                     return lm;
                 }
@@ -78,7 +81,7 @@ namespace LabelCreator.Helpers
 
 
             throw new Exception("Nie rozpoznano głownego elementu Canvas z pliku");
-        }
+        }               
 
         private static void GetLabels(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
         {
@@ -200,8 +203,7 @@ namespace LabelCreator.Helpers
                 throw new Exception("Błąd podczas przetwarzania komponentów typu Label. " + ex.Message);
             }            
         }
-
-
+        
         private static void GetImages(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
         {
             var images = canvas.Descendants(Namespace + "Image").ToList();
@@ -232,8 +234,39 @@ namespace LabelCreator.Helpers
                 catch (Exception ex)
                 {
                     throw new Exception("Błąd podczas przetwarzania komponentów typu Image. " + ex.Message);
+                }                
+            }
+        }
+
+        private static void GetBarcodes(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
+        {
+            var codes = canvas.Descendants(Namespace + "BarcodeControl").ToList();
+
+            foreach (var code in codes)
+            {
+                try
+                {
+                    var bc = new BarcodeControl();
+
+                    bc.CodeType = (TYPE)Enum.Parse(typeof(TYPE),code.Attribute("CodeType").Value);
+                    bc.CodeText = code.Attribute("CodeText").Value;
+                    bc.CodeMargin = Convert.ToInt32(code.Attribute("CodeMargin").Value);
+                    bc.PureCode = Convert.ToBoolean(code.Attribute("PureCode").Value);
+                    bc.Source = new BitmapImage(new Uri(code.Attribute("Source").Value.Replace("file:///", "")));
+                    bc.Name = code.Attribute("Name").Value;
+                    bc.Width = Convert.ToDouble(code.Attribute("Width").Value);
+                    bc.Height = Convert.ToDouble(code.Attribute("Height").Value);
+                    bc.Cursor = Cursors.Hand;
+
+                    var canvasLeft = Convert.ToDouble(StrToDouble(code.Attribute("Canvas.Left").Value));
+                    var canvasTop = Convert.ToDouble(StrToDouble(code.Attribute("Canvas.Top").Value));
+
+                    list.Add(bc, new CanvasPosition(canvasLeft, canvasTop));
                 }
-                
+                catch (Exception ex)
+                {
+                    throw new Exception("Błąd podczas przetwarzania komponentów typu Barcode. " + ex.Message);
+                }
             }
         }
     }

@@ -18,6 +18,8 @@ namespace LabelCreator.Helpers
         {
             var mystrXAML = XamlWriter.Save(mainCanvas);
 
+            mystrXAML = mystrXAML.Replace("<lch:", "<"); // FIX FOR BARCODES
+
             SaveFileDialog dlg = new SaveFileDialog();
 
             var dc = mainCanvas.DataContext;
