@@ -38,6 +38,10 @@ namespace LabelCreator.ViewModel
             TbFontStyle = dc.TbFontStyle;
             TbFontWeight = dc.TbFontWeight;
             TbTextDecorations = dc.TbTextDecorations;
+            TbWidth = dc.TbWidth;
+            TbHeight = dc.TbHeight;
+            TbHorizontalContentAligment = dc.TbHorizontalContentAligment;
+            TbVerticalContentAligment = dc.TbVerticalContentAligment;
         }
 
         //private Label newLabel;
@@ -105,8 +109,7 @@ namespace LabelCreator.ViewModel
                 {
                     BorderColor = new SolidColorBrush(Colors.White);
                     BorderThickness = 0;
-                }
-                
+                }                
             }
         }
 
@@ -167,6 +170,33 @@ namespace LabelCreator.ViewModel
             set { tbTextDecorations = value; OnPropertyChanged("TbTextDecorations"); }
         }
 
+        private double tbWidth = 100;
+        public double TbWidth
+        {
+            get { return tbWidth; }
+            set { tbWidth = value; OnPropertyChanged("TbWidth"); }
+        }
+
+        private double tbHeight = 40;
+        public double TbHeight
+        {
+            get { return tbHeight; }
+            set { tbHeight = value; OnPropertyChanged("TbHeight"); }
+        }
+
+        private System.Windows.HorizontalAlignment tbHorizontalContentAligment;
+        public System.Windows.HorizontalAlignment TbHorizontalContentAligment
+        {
+            get { return tbHorizontalContentAligment; }
+            set { tbHorizontalContentAligment = value; OnPropertyChanged("TbHorizontalContentAligment"); }
+        }
+
+        private System.Windows.VerticalAlignment tbVerticalContentAligment;
+        public System.Windows.VerticalAlignment TbVerticalContentAligment
+        {
+            get { return tbVerticalContentAligment; }
+            set { tbVerticalContentAligment = value; OnPropertyChanged("TbVerticalContentAligment"); }
+        }
 
 
 

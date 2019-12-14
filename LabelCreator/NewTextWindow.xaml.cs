@@ -139,5 +139,35 @@ namespace LabelCreator
         {
             e.Handled = !AppHandler.IsTextAllowed(e.Text);
         }
+
+        private void ButtonAlignCenterClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbHorizontalContentAligment = System.Windows.HorizontalAlignment.Center;
+        }
+
+        private void ButtonAlignLeftClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbHorizontalContentAligment = System.Windows.HorizontalAlignment.Left;
+        }
+
+        private void ButtonAlignRightClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbHorizontalContentAligment = System.Windows.HorizontalAlignment.Right;
+        }
+
+        private void ButtonAlignTopClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbVerticalContentAligment = System.Windows.VerticalAlignment.Top;
+        }
+
+        private void ButtonAlignMiddleClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbVerticalContentAligment = System.Windows.VerticalAlignment.Center;
+        }
+
+        private void ButtonAlignBotClick(object sender, RoutedEventArgs e)
+        {
+            NewTextVM.TbVerticalContentAligment = System.Windows.VerticalAlignment.Bottom;
+        }
     }
 }

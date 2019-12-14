@@ -62,13 +62,31 @@
                     <Label Content="Grubość:"/>
                     <TextBox Width="30" Text="{Binding BorderThickness, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Border}" PreviewTextInput="TextBox_PreviewTextInput" VerticalContentAlignment="Center"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="25" Margin="2">
+                    <Label Content="Wysokość:" Width="110" HorizontalContentAlignment="Right"/>
+                    <TextBox Width="70" Text="{Binding TbHeight}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="25" Margin="2">
+                    <Label Content="Szerokość:" Width="110" HorizontalContentAlignment="Right"/>
+                    <TextBox Width="70" Text="{Binding TbWidth}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="25" Margin="2">
+                    <Label Content="Wyrównanie:" Width="110" HorizontalContentAlignment="Right"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignLeftClick" Content="L"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignCenterClick" Content="C"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignRightClick" Content="R"/>
+                    <Label BorderBrush="DimGray" BorderThickness="1" Width="1" Margin="5"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignTopClick" Content="T"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignMiddleClick" Content="M"/>
+                    <Button Width="23" Margin="2" Click="ButtonAlignBotClick" Content="B"/>
+                </StackPanel>
             </StackPanel>    
         </GroupBox>
 
         <GroupBox Grid.Row="0" Grid.Column="1" Header="Podgląd">
             <Canvas Name="CanvasPreview" Width="auto" Height="auto">
-                <Label Name="LabelPreview" BorderBrush="{Binding BorderColor}" BorderThickness="{Binding BorderThickness}">
-                    <TextBlock Name="TextBlockPreview" Text="{Binding LabelContent, UpdateSourceTrigger=PropertyChanged}" FontFamily="{Binding TbFontFamily}" FontSize="{Binding TbFontSize}" Foreground="{Binding FontColor}" FontWeight="{Binding TbFontWeight}" TextDecorations="{Binding TbTextDecorations}"/>
+                <Label Name="LabelPreview" BorderBrush="{Binding BorderColor}" BorderThickness="{Binding BorderThickness}" VerticalContentAlignment="{Binding TbVerticalContentAligment}" HorizontalContentAlignment="{Binding TbHorizontalContentAligment}" Width="{Binding TbWidth}" Height="{Binding TbHeight}">
+                    <TextBlock Name="TextBlockPreview" Text="{Binding LabelContent, UpdateSourceTrigger=PropertyChanged}" FontFamily="{Binding TbFontFamily}" FontSize="{Binding TbFontSize}" Foreground="{Binding FontColor}" FontWeight="{Binding TbFontWeight}" TextDecorations="{Binding TbTextDecorations}" />
                 </Label>
             </Canvas>
         </GroupBox>

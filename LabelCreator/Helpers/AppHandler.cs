@@ -42,6 +42,18 @@ namespace LabelCreator.Helpers
             Binding l2 = new Binding("BorderThickness");
             BindingOperations.SetBinding(NewText, Label.BorderThicknessProperty, l2);
 
+            Binding l3 = new Binding("TbWidth");
+            BindingOperations.SetBinding(NewText, Label.WidthProperty, l3);
+
+            Binding l4 = new Binding("TbHeight");
+            BindingOperations.SetBinding(NewText, Label.HeightProperty, l4);
+
+            Binding l5 = new Binding("TbHorizontalContentAligment");
+            BindingOperations.SetBinding(NewText, Label.HorizontalContentAlignmentProperty, l5);
+
+            Binding l6 = new Binding("TbVerticalContentAligment");
+            BindingOperations.SetBinding(NewText, Label.VerticalContentAlignmentProperty, l6);
+
             Binding t1 = new Binding("LabelContent");
             BindingOperations.SetBinding(NewTextBlock, TextBlock.TextProperty, t1);
 
@@ -61,7 +73,7 @@ namespace LabelCreator.Helpers
             BindingOperations.SetBinding(NewTextBlock, TextBlock.FontStyleProperty, t6);
 
             Binding t7 = new Binding("TbTextDecorations");
-            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextDecorationsProperty, t7);
+            BindingOperations.SetBinding(NewTextBlock, TextBlock.TextDecorationsProperty, t7);           
         }                       
 
         // TYLKO LICZBY 
