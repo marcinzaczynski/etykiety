@@ -46,7 +46,7 @@ namespace LabelCreator.ViewModel
 
             if(imgSrc != null)
             {
-                Name = $"IMG_{Path.GetFileName(imgSrc)}".Replace(".","_");
+                Name = $"IMG_{Path.GetFileName(imgSrc)}".Replace(" ", "_").Replace("-","_").Replace(".","_");
                 ImageSource = imgSrc;
                 return true;
             }

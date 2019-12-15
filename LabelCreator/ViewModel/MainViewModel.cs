@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -24,8 +25,8 @@ namespace LabelCreator.ViewModel
         
         public MainViewModel()
         {
-
-        }
+            LoadControlListTree();
+        }        
 
         // ========================= FIELDS ====================================
         #region
@@ -167,10 +168,58 @@ namespace LabelCreator.ViewModel
             set { currentComponentName = value; OnPropertyChanged("CurrentComponentName"); }
         }
 
+        private void LoadControlListTree()
+        {
+            colntrolList = new ObservableCollection<OwnControl>();
+
+            //add Root items
+            ControlList.Add(new OwnControl { ControlName = "Tekst"});
+            ControlList.Add(new OwnControl { ControlName = "Obraz"});
+            ControlList.Add(new OwnControl { ControlName = "Kod kreskowy"});
+                        
+            ControlList[0].Childrens = new ObservableCollection<OwnControl>();
+            ControlList[1].Childrens = new ObservableCollection<OwnControl>();
+            ControlList[2].Childrens = new ObservableCollection<OwnControl>();
+            
+            //ControlList[0].Childrens.Add(new OwnControl { ControlName = "Test11"});
+            //ControlList[1].Childrens.Add(new OwnControl { ControlName = "Test21"});
+            //ControlList[2].Childrens.Add(new OwnControl { ControlName = "Test31"});
+            
+        }
+
+        private ObservableCollection<OwnControl> colntrolList;
+        public ObservableCollection<OwnControl> ControlList
+        {
+            get { return colntrolList; }
+            set
+            {
+                colntrolList = value;
+                OnPropertyChanged("ControlList");
+            }
+        }
+
         #endregion
         // =====================================================================
+    }
+
+    public class OwnControl : INotifyPropertyChanged
+    {     
+        public string ControlName { get; set; }
+        public ObservableCollection<OwnControl> Childrens { get; set; }
+
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; OnPropertyChanged("IsSelected"); }
+        }
 
 
-        
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

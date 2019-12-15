@@ -111,16 +111,35 @@
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
             <GroupBox  Header="Komponenty">
-                <TreeView BorderBrush="{x:Null}" >
+                <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding ControlList}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">                            
+                            <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type ViewModel:OwnControl}" ItemsSource="{Binding Childrens}">
+                            <TextBlock Text="{Binding Path=ControlName}" HorizontalAlignment="Left"/>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+                <!--<TreeView BorderBrush="{x:Null}">
                     <TreeViewItem Header="{Binding FileName}" IsExpanded="True">
-                        <TreeViewItem Name="TreeViewItemTextsRoot" Header="Tekst" HorizontalAlignment="Left" />
+                        <TreeViewItem Name="TreeViewItemTextsRoot" Header="Tekst" HorizontalAlignment="Left" IsExpanded="True" ItemsSource="{Binding TextComponentList}" DisplayMemberPath="Name"/>
                         <TreeViewItem Name="TreeViewItemTextsFromDbRoot" Header="Tekst z bazy" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemImageFromFileRoot" Header="Obraz" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemImageFromDbRoot" Header="Obraz z bazy" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemBarcodeRoot" Header="Kod kreskowy" HorizontalAlignment="Left" />
                         <TreeViewItem Name="TreeViewItemBarcodeFromDbRoot" Header="Kod kreskowy z bazy" HorizontalAlignment="Left" />
                     </TreeViewItem>
-                </TreeView>
+                </TreeView>-->
             </GroupBox>
         </ScrollViewer>
 
@@ -143,7 +162,7 @@
         <GroupBox Grid.Row="2" Grid.Column="2" Header="Aktaulny komponent">
             <StackPanel Margin="5">
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <Label Content="Nazwa:"/>
+                    <Label Content="Nazwa:" />
                     <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
                 </StackPanel>
                 <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
