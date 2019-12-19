@@ -325,11 +325,11 @@ namespace LabelCreator
                 }
                 else if (currentComponent is BarcodeControl bcc)
                 {
-                    MainVM.ControlList[2].Childrens.Remove(MainVM.ControlList[0].Childrens.Where(r => r.ControlName == bcc.Name).FirstOrDefault());
+                    MainVM.ControlList[2].Childrens.Remove(MainVM.ControlList[2].Childrens.Where(r => r.ControlName == bcc.Name).FirstOrDefault());
                 }
                 else if (currentComponent is Image img)
                 {
-                    MainVM.ControlList[1].Childrens.Remove(MainVM.ControlList[0].Childrens.Where(r => r.ControlName == img.Name).FirstOrDefault());
+                    MainVM.ControlList[1].Childrens.Remove(MainVM.ControlList[1].Childrens.Where(r => r.ControlName == img.Name).FirstOrDefault());
                 }
 
                 MainVM.CurrentComponentName = null;
@@ -353,17 +353,29 @@ namespace LabelCreator
 
             if (result == true)
             {
-
                 MainVM.MarginVisibility = Visibility.Collapsed;
-
-                //var con = 0.254;
-                //Size pageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
-                //MainCanvas.Measure(pageSize);
-                MainCanvas.Arrange(new Rect(MainCanvas.DesiredSize));
-                //MainCanvas.Arrange(new Rect(0, 0, pageSize.Width, pageSize.Height));
                 try
                 {
-                    dlg.PrintVisual(MainCanvas, "Printing canvas");
+                    var h = dlg.PrintableAreaHeight;
+                    var w = dlg.PrintableAreaWidth;
+
+                    Size pageSize = new Size(w,h);
+                    MainCanvas.Measure(pageSize);
+                    MainCanvas.Arrange(new Rect(-5, -5, pageSize.Width, pageSize.Height));
+
+                    dlg.PrintVisual(MainCanvas, "Printing Canvas");
+
+                    //PrintCapabilities capabilities = dlg.PrintQueue.GetPrintCapabilities(dlg.PrintTicket);
+                    //Size orig_sz = new Size(MainCanvas.ActualWidth, MainCanvas.ActualHeight);
+                    //Size sz = new Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
+                    //MainCanvas.Measure(sz);
+                    //MainCanvas.Arrange(new Rect(new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
+
+                    //dlg.PrintVisual(MainCanvas, "Label printing");
+
+
+                    //MainCanvas.Arrange(new Rect(MainCanvas.DesiredSize));    
+                    //dlg.PrintVisual(MainCanvas, "Printing canvas");
                 }
                 catch (Exception ex)
                 {
@@ -568,7 +580,7 @@ namespace LabelCreator
             //return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.DataContext is NewTextViewModel).ToList().Where(cc => ((NewTextViewModel)cc.DataContext).Name == name).FirstOrDefault();
 
             return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == name).FirstOrDefault();
-        }        
+        }
 
         private List<T> GetCanvasComponents<T>() where T : FrameworkElement
         {
@@ -583,14 +595,14 @@ namespace LabelCreator
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if(e.NewValue is OwnControl oc)
+            if (e.NewValue is OwnControl oc)
             {
                 var currentComponent = GetCanvasComponentByName(oc.ControlName);
 
                 if (currentComponent != null)
                 {
-                    if(currentComponent is Control cn)
-                    {                        
+                    if (currentComponent is Control cn)
+                    {
                         cn.BorderThickness = new Thickness(2);
                         cn.BorderBrush = BorderBrush = Brushes.Black;
                         return;
