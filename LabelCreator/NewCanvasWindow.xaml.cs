@@ -34,6 +34,8 @@ namespace LabelCreator
             InitializeComponent();
 
             SetPrintersList();
+
+            DbHandler.T1GetGroups();
         }
 
         private void SetPrintersList()

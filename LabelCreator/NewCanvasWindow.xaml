@@ -8,7 +8,7 @@
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         Closed="Window_Closed"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+        Title="NewCanvasWindow" ResizeMode="CanResize" SizeToContent="WidthAndHeight">
 
     <Window.DataContext>
         <ViewModel:NewCanvasViewModel x:Name="NewCanvasVM"/>
@@ -26,6 +26,7 @@
     <Window.Resources>
         <helpers:DoubleConverter x:Key="DoubleConverter" />
         <Style x:Key="DoubleFormat" TargetType="TextBox" >
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <EventSetter Event="PreviewTextInput"  Handler="Double_PreviewTextInput"/>
             <!--<EventSetter Event="GotKeyboardFocus"  Handler="TextBox_GotFocus"/>-->
             <!--<EventSetter Event="GotMouseCapture"  Handler="TextBox_GotFocus"/>-->
@@ -39,8 +40,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="300"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="330"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -52,7 +53,7 @@
                 <Label Content="Wybierz drukarkę:"/>
                 <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
                 <Label Content="Wybierz papier:"/>
-                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="175"/>   
+                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="200"/>   
             </StackPanel>
         </GroupBox>
 
@@ -86,6 +87,14 @@
                 <Label Content="px"/>
                 <Label Content="{Binding HeightIn}" Width="50" HorizontalContentAlignment="Right"/>
                 <Label Content="in"/>
+            </StackPanel>
+
+            <Separator Margin="15,5,15,0"/>
+
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <Label Content="Firma z bazy:" Width="90" HorizontalContentAlignment="Right"/>
+                <CheckBox VerticalAlignment="Center"/>
+                <ComboBox Width="120"/>
             </StackPanel>
         </StackPanel>
 

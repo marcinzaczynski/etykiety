@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="etykietyModel.Store" Provider="Npgsql" ProviderManifestToken="10.11" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="profile">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="200" />
+          <Property Name="pozw_import" Type="bool" Nullable="false" />
+          <Property Name="pozw_edycja" Type="bool" Nullable="false" />
+          <Property Name="pozw_druk" Type="bool" Nullable="false" />
+          <Property Name="opw" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t1">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+          </Key>
+          <Property Name="id_grupa" Type="int4" Nullable="false" />
+          <Property Name="nazwa" Type="text" />
+          <Property Name="opw" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t2">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+            <PropertyRef Name="id_pole" />
+          </Key>
+          <Property Name="id_grupa" Type="int4" Nullable="false" />
+          <Property Name="id_pole" Type="int4" Nullable="false" />
+          <Property Name="nazwa" Type="text" />
+          <Property Name="opw" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t3">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+            <PropertyRef Name="id_wyrob" />
+            <PropertyRef Name="id_pole" />
+          </Key>
+          <Property Name="id_grupa" Type="int4" Nullable="false" />
+          <Property Name="id_wyrob" Type="int4" Nullable="false" />
+          <Property Name="id_pole" Type="int4" Nullable="false" />
+          <Property Name="wartosc" Type="text" />
+          <Property Name="opw" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'etykiety.public.test' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="test">
+          <Property Name="test" Type="int4" />
+        </EntityType>-->
+        <EntityType Name="uzytkownicy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" Nullable="false" />
+          <Property Name="imie" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nazwisko" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="pass" Type="varchar" MaxLength="50" />
+          <Property Name="aktywny" Type="bool" Nullable="false" />
+          <Property Name="profil" Type="int4" Nullable="false" />
+          <Property Name="opw" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <EntityType Name="wyroby">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" Nullable="false" />
+          <Property Name="indeks" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="opis2" Type="varchar" MaxLength="100" />
+          <Property Name="aktywny" Type="bool" Nullable="false" />
+          <Property Name="do_aktualizacji" Type="bool" Nullable="false" />
+          <Property Name="grupa" Type="int4" Nullable="false" />
+          <Property Name="wzor_etk" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="opw" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="czasw" Type="timestamp" Nullable="false" />
+          <Property Name="opm" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="czasm" Type="timestamp" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="etykietyModelStoreContainer">
+          <EntitySet Name="profile" EntityType="Self.profile" Schema="public" store:Type="Tables" />
+          <EntitySet Name="t1" EntityType="Self.t1" Schema="public" store:Type="Tables" />
+          <EntitySet Name="t2" EntityType="Self.t2" Schema="public" store:Type="Tables" />
+          <EntitySet Name="t3" EntityType="Self.t3" Schema="public" store:Type="Tables" />
+          <EntitySet Name="uzytkownicy" EntityType="Self.uzytkownicy" Schema="public" store:Type="Tables" />
+          <EntitySet Name="wyroby" EntityType="Self.wyroby" Schema="public" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="etykietyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="profile">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="opis" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="pozw_import" Type="Boolean" Nullable="false" />
+          <Property Name="pozw_edycja" Type="Boolean" Nullable="false" />
+          <Property Name="pozw_druk" Type="Boolean" Nullable="false" />
+          <Property Name="opw" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t1">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+          </Key>
+          <Property Name="id_grupa" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="opw" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t2">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+            <PropertyRef Name="id_pole" />
+          </Key>
+          <Property Name="id_grupa" Type="Int32" Nullable="false" />
+          <Property Name="id_pole" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="opw" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t3">
+          <Key>
+            <PropertyRef Name="id_grupa" />
+            <PropertyRef Name="id_wyrob" />
+            <PropertyRef Name="id_pole" />
+          </Key>
+          <Property Name="id_grupa" Type="Int32" Nullable="false" />
+          <Property Name="id_wyrob" Type="Int32" Nullable="false" />
+          <Property Name="id_pole" Type="Int32" Nullable="false" />
+          <Property Name="wartosc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="opw" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uzytkownicy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="imie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="nazwisko" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="pass" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="aktywny" Type="Boolean" Nullable="false" />
+          <Property Name="profil" Type="Int32" Nullable="false" />
+          <Property Name="opw" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="wyroby">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="indeks" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="opis" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="opis2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="aktywny" Type="Boolean" Nullable="false" />
+          <Property Name="do_aktualizacji" Type="Boolean" Nullable="false" />
+          <Property Name="grupa" Type="Int32" Nullable="false" />
+          <Property Name="wzor_etk" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="opw" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasw" Type="DateTime" Precision="6" Nullable="false" />
+          <Property Name="opm" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="czasm" Type="DateTime" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="etykietyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="profile" EntityType="Self.profile" />
+          <EntitySet Name="t1" EntityType="Self.t1" />
+          <EntitySet Name="t2" EntityType="Self.t2" />
+          <EntitySet Name="t3" EntityType="Self.t3" />
+          <EntitySet Name="uzytkownicy" EntityType="Self.uzytkownicy" />
+          <EntitySet Name="wyroby" EntityType="Self.wyroby" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="etykietyModelStoreContainer" CdmEntityContainer="etykietyEntities">
+          <EntitySetMapping Name="profile">
+            <EntityTypeMapping TypeName="etykietyModel.profile">
+              <MappingFragment StoreEntitySet="profile">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="pozw_import" ColumnName="pozw_import" />
+                <ScalarProperty Name="pozw_edycja" ColumnName="pozw_edycja" />
+                <ScalarProperty Name="pozw_druk" ColumnName="pozw_druk" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t1">
+            <EntityTypeMapping TypeName="etykietyModel.t1">
+              <MappingFragment StoreEntitySet="t1">
+                <ScalarProperty Name="id_grupa" ColumnName="id_grupa" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t2">
+            <EntityTypeMapping TypeName="etykietyModel.t2">
+              <MappingFragment StoreEntitySet="t2">
+                <ScalarProperty Name="id_grupa" ColumnName="id_grupa" />
+                <ScalarProperty Name="id_pole" ColumnName="id_pole" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t3">
+            <EntityTypeMapping TypeName="etykietyModel.t3">
+              <MappingFragment StoreEntitySet="t3">
+                <ScalarProperty Name="id_grupa" ColumnName="id_grupa" />
+                <ScalarProperty Name="id_wyrob" ColumnName="id_wyrob" />
+                <ScalarProperty Name="id_pole" ColumnName="id_pole" />
+                <ScalarProperty Name="wartosc" ColumnName="wartosc" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uzytkownicy">
+            <EntityTypeMapping TypeName="etykietyModel.uzytkownicy">
+              <MappingFragment StoreEntitySet="uzytkownicy">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="imie" ColumnName="imie" />
+                <ScalarProperty Name="nazwisko" ColumnName="nazwisko" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="pass" ColumnName="pass" />
+                <ScalarProperty Name="aktywny" ColumnName="aktywny" />
+                <ScalarProperty Name="profil" ColumnName="profil" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="wyroby">
+            <EntityTypeMapping TypeName="etykietyModel.wyroby">
+              <MappingFragment StoreEntitySet="wyroby">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="indeks" ColumnName="indeks" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="opis2" ColumnName="opis2" />
+                <ScalarProperty Name="aktywny" ColumnName="aktywny" />
+                <ScalarProperty Name="do_aktualizacji" ColumnName="do_aktualizacji" />
+                <ScalarProperty Name="grupa" ColumnName="grupa" />
+                <ScalarProperty Name="wzor_etk" ColumnName="wzor_etk" />
+                <ScalarProperty Name="opw" ColumnName="opw" />
+                <ScalarProperty Name="czasw" ColumnName="czasw" />
+                <ScalarProperty Name="opm" ColumnName="opm" />
+                <ScalarProperty Name="czasm" ColumnName="czasm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
