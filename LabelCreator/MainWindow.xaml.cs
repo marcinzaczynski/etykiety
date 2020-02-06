@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Printing;
 using System.Text;
@@ -41,7 +42,7 @@ namespace LabelCreator
         // Przeciągany element na Canvasie
         object MovingObject;
 
-
+        PrintDialog dlg = new PrintDialog();
 
         public MainWindow()
         {
@@ -60,6 +61,20 @@ namespace LabelCreator
             PreviewMouseMove += this.MouseMove;
 
             PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
+
+            SetPrintersList();
+
+            
+        }
+
+        private void SetPrintersList()
+        {
+            MainVM.InstalledPrinters = new List<string>();
+
+            foreach (string printer in PrinterSettings.InstalledPrinters)
+            {
+                MainVM.InstalledPrinters.Add(printer);
+            }
         }
 
         private void Command_NewText(object sender, ExecutedRoutedEventArgs e)
@@ -83,6 +98,7 @@ namespace LabelCreator
 
         private void Command_NewBarcode(object sender, ExecutedRoutedEventArgs e)
         {
+            
             var newBarcodeWindow = new NewBarcodeWindow();
 
             newBarcodeWindow.ShowDialog();
@@ -214,8 +230,9 @@ namespace LabelCreator
                 ClearCanvas();
 
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
-                MainVM.CanvasHeight = cnw.NewCanvasVM.HeightPx;
-                MainVM.CanvasWidth = cnw.NewCanvasVM.WidthPx;
+                MainVM.CanvasHeightMM = cnw.NewCanvasVM.Height;
+                MainVM.CanvasWidthMM = cnw.NewCanvasVM.Width;
+                //MainVM.DPI = cnw.NewCanvasVM.DPI;
 
                 MainCanvas.UpdateLayout();
             }
@@ -231,8 +248,8 @@ namespace LabelCreator
 
                 MainVM.CurrentComponentName = null;
 
-                MainVM.CanvasHeight = output.CanvasHeight;
-                MainVM.CanvasWidth = output.CanvasWidht;
+                MainVM.CanvasHeightMM = MainVM.pxToMm(output.CanvasHeight);
+                MainVM.CanvasWidthMM = MainVM.pxToMm(output.CanvasWidht);
 
                 foreach (var component in output.Components)
                 {
@@ -347,42 +364,66 @@ namespace LabelCreator
         private void Command_Print(object sender, ExecutedRoutedEventArgs e)
         {
             SliderCanvasZoom.Value = 1;
-            PrintDialog dlg = new PrintDialog();
 
-            var result = dlg.ShowDialog();
+            Canvas root = new Canvas();
 
-            if (result == true)
+            root.Width = MainCanvas.Width;
+            root.Height = MainCanvas.Height;
+            root.UseLayoutRounding = true;
+
+            foreach (UIElement child in MainCanvas.Children)
             {
-                MainVM.MarginVisibility = Visibility.Collapsed;
-                try
-                {
-                    var h = dlg.PrintableAreaHeight;
-                    var w = dlg.PrintableAreaWidth;
+                var xaml = System.Windows.Markup.XamlWriter.Save(child);
 
-                    Size pageSize = new Size(w,h);
-                    MainCanvas.Measure(pageSize);
-                    MainCanvas.Arrange(new Rect(-5, -5, pageSize.Width, pageSize.Height));
+                if (xaml.Contains("PreviewMouseLeftButtonDown")) continue;
 
-                    dlg.PrintVisual(MainCanvas, "Printing Canvas");
+                var deepCopy = System.Windows.Markup.XamlReader.Parse(xaml) as UIElement;
+                root.Children.Add(deepCopy);
+            }
 
-                    //PrintCapabilities capabilities = dlg.PrintQueue.GetPrintCapabilities(dlg.PrintTicket);
-                    //Size orig_sz = new Size(MainCanvas.ActualWidth, MainCanvas.ActualHeight);
-                    //Size sz = new Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
-                    //MainCanvas.Measure(sz);
-                    //MainCanvas.Arrange(new Rect(new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
+            PrinterHandler.CreateImage(MainCanvas);
 
-                    //dlg.PrintVisual(MainCanvas, "Label printing");
+            PrinterHandler.Print(root, MainVM.SelectedPrinter);
+            //PrinterHandler.PrintFixed(root, MainVM.SelectedPrinter);
 
 
-                    //MainCanvas.Arrange(new Rect(MainCanvas.DesiredSize));    
-                    //dlg.PrintVisual(MainCanvas, "Printing canvas");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            //MainVM.HiedeMargins = true;
+        }
 
-                MainVM.MarginVisibility = Visibility.Visible;
+        private void Print(Visual v)
+        {
+
+            System.Windows.FrameworkElement e = v as System.Windows.FrameworkElement;
+            if (e == null)
+                return;
+
+            PrintDialog pd = new PrintDialog();
+            if (pd.ShowDialog() == true)
+            {
+                //store original scale
+                Transform originalScale = e.LayoutTransform;
+                //get selected printer capabilities
+                System.Printing.PrintCapabilities capabilities = pd.PrintQueue.GetPrintCapabilities(pd.PrintTicket);
+
+                //get scale of the print wrt to screen of WPF visual
+                double scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth, capabilities.PageImageableArea.ExtentHeight /
+                               e.ActualHeight);
+
+                //Transform the Visual to scale
+                e.LayoutTransform = new ScaleTransform(scale, scale);
+
+                //get the size of the printer page
+                System.Windows.Size sz = new System.Windows.Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
+
+                //update the layout of the visual to the printer page size.
+                e.Measure(sz);
+                e.Arrange(new System.Windows.Rect(new System.Windows.Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
+
+                //now print the visual to printer to fit on the one page.
+                pd.PrintVisual(v, "My Print");
+
+                //apply the original transform.
+                e.LayoutTransform = originalScale;
             }
         }
 

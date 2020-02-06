@@ -33,9 +33,7 @@ namespace LabelCreator
         {
             InitializeComponent();
 
-            SetPrintersList();
-
-            DbHandler.T1GetGroups();
+            SetPrintersList();                        
         }
 
         private void SetPrintersList()
@@ -50,7 +48,17 @@ namespace LabelCreator
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            // NAZWA MUSI BYĆ WPISANA A ROZMIAR ETYKIETY WIĘKSZY OD 0
+            if(!string.IsNullOrWhiteSpace(NewCanvasVM.FileName) && NewCanvasVM.Width > 0 && NewCanvasVM.Height > 0)
+            {
+                // JEŚLI ZAZNACZONY CHECKBOX FIRMA Z BAZY TO MUSI BYĆ JESZCZE WYBRANA FIRMA Z LISTY
+                if(NewCanvasVM.DbGroups && NewCanvasVM.SelectedDbGroups == null)
+                {
+                    return;
+                }
+
+                e.CanExecute = true;
+            }
         }
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)

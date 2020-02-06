@@ -8,7 +8,7 @@
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
         Closed="Window_Closed"
         mc:Ignorable="d"
-        Title="NewCanvasWindow" ResizeMode="CanResize" SizeToContent="WidthAndHeight">
+        Title="NewCanvasWindow" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight">
 
     <Window.DataContext>
         <ViewModel:NewCanvasViewModel x:Name="NewCanvasVM"/>
@@ -62,7 +62,9 @@
                 <Label Content="Nazwa:" Width="90" HorizontalContentAlignment="Right"/>
                 <TextBox Width="120" 
                          Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                         Style="{StaticResource DoubleFormat}"/>                
+                         Style="{StaticResource DoubleFormat}"/>
+                <Label Content="DPI:"/>
+                <Label Content="{Binding DPI}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="2">
@@ -89,12 +91,15 @@
                 <Label Content="in"/>
             </StackPanel>
 
-            <Separator Margin="15,5,15,0"/>
+            <Separator Margin="15,5,15,0" Background="LightGray"/>
 
             <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Firma z bazy:" Width="90" HorizontalContentAlignment="Right"/>
-                <CheckBox VerticalAlignment="Center"/>
-                <ComboBox Width="120"/>
+                <CheckBox VerticalAlignment="Center" IsChecked="{Binding DbGroups}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2" IsEnabled="{Binding DbGroups}">
+                <Label Content="Wybierz:" Width="90" HorizontalContentAlignment="Right"/>
+                <ComboBox Width="120" ItemsSource="{Binding DbGroupsList}" DisplayMemberPath="nazwa" SelectedItem="{Binding SelectedDbGroups}"/>
             </StackPanel>
         </StackPanel>
 

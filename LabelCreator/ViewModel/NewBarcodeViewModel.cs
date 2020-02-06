@@ -40,7 +40,7 @@ namespace LabelCreator.ViewModel
         private bool pureCode = false;
 
         /// <summary>
-        /// konstruktor ustawiający parametry obiektu tymczasowego, który zostanie zwrócony do okna głównego
+        /// Konstruktor ustawiający parametry obiektu tymczasowego, który zostanie zwrócony do okna głównego
         /// </summary>
         public NewBarcodeViewModel()
         {
@@ -53,7 +53,7 @@ namespace LabelCreator.ViewModel
                 CodeText = CodeText,
                 PureCode = PureCode,
                 Source = ImgSource,
-                CodeType = selectedCodeFormat,
+                CodeType = selectedCodeFormat
             };
 
             RefreshCode();

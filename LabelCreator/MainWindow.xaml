@@ -8,7 +8,7 @@
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="LabelCreator.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow"
-        Width="940" 
+        Width="1240" 
         MinWidth="300"
         Height="670"
         MinHeight="200"
@@ -19,12 +19,12 @@
             <Setter Property="BorderBrush" Value="Red"></Setter>
             <Setter Property="BorderThickness" Value="2"></Setter>
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MouseLeftButtonDown"></EventSetter>
-            <!--<EventSetter Event="PreviewMouseLeftButtonUp" Handler="OnPreviewMouseLeftButtonUp"></EventSetter>--> 
+            <!--<EventSetter Event="PreviewMouseLeftButtonUp" Handler="OnPreviewMouseLeftButtonUp"></EventSetter>-->
         </Style>
     </Window.Resources>
 
     <Window.DataContext>
-        <ViewModel:MainViewModel CanvasHeight="270" CanvasWidth="500" x:Name="MainVM"/>
+        <ViewModel:MainViewModel CanvasHeightMM="69" CanvasWidthMM="65" x:Name="MainVM"/>
     </Window.DataContext>
 
     <Window.CommandBindings>
@@ -51,7 +51,7 @@
         <CommandBinding Command="helpers:CommandHandler.FileOpen"
                         Executed="Command_FileOpen"
                         />
-        
+
         <CommandBinding Command="helpers:CommandHandler.FileSave"
                         Executed="Command_FileSave"
                         />
@@ -62,8 +62,8 @@
 
         <CommandBinding Command="helpers:CommandHandler.Exit" 
                         Executed="Command_Exit"/>
-        
-       
+
+
     </Window.CommandBindings>
 
     <Grid>
@@ -83,7 +83,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="240"/>
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
@@ -113,7 +113,7 @@
             <GroupBox  Header="Komponenty">
                 <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding ControlList}" SelectedItemChanged="TreeView_SelectedItemChanged">
                     <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}">                            
+                        <Style TargetType="{x:Type TreeViewItem}">
                             <Setter Property="IsExpanded" Value="True" />
                             <Setter Property="IsSelected" Value="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <Setter Property="FontWeight" Value="Normal" />
@@ -146,32 +146,102 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
             <GroupBox Header="Obszar roboczy" Padding="10" Name="WorkspaceFrame">
                 <!--<helpers:FunkyBorder BorderBrush="Red" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp">-->
-                <Canvas x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2">
+                <Canvas x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform" />
                     </Canvas.LayoutTransform>
+                    
+                    <Border BorderThickness="1" BorderBrush="Black">
+                        <Label Content="ASDF"  FontSize="12" Canvas.Top="0" Canvas.Left="0" />
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Canvas.Top="0" Canvas.Right="0" >
+                        <Label Content="ASDF"  FontSize="12"/>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Canvas.Bottom="0" Canvas.Right="0">
+                        <Label Content="ASDF"   FontSize="12"/>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Canvas.Bottom="0" Canvas.Left="0" >
+                        <Label Content="ASDF"  FontSize="12"/>
+                    </Border>
+                    
+                    
                     <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </Canvas>
                 <!--</helpers:FunkyBorder>-->
+
+                
             </GroupBox>
         </ScrollViewer>
 
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="Aktaulny komponent">
-            <StackPanel Margin="5">
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <Label Content="Nazwa:" />
-                    <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
-                </StackPanel>
-                <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
-                <Line Margin="3"></Line>
-                <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.DeleteComponent" />
+        <StackPanel Grid.Row="2" Grid.Column="2">
 
-            </StackPanel>
-        </GroupBox>
-        
+            <GroupBox Header="Canvas">
+                
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Drukarka:" Width="65"/>
+                        <ComboBox Width="150" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Papier:" Width="65"/>
+                        <ComboBox Width="150" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="DPI:" Width="65"/>
+                        <TextBox Text="{Binding DPI}" Width="60"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
+                        <Label Content="Szerokość:" Width="65"/>
+                        <TextBox Text="{Binding CanvasWidthMM}" Width="60"/>
+                        <Label Content="mm"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasWidth}" Width="60"/>
+                        <Label Content="px"/>
+                    </StackPanel>                    
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasWidthIN}" Width="60" />
+                        <Label Content="in"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
+                        <Label Content="Wysokość:" Width="65"/>
+                        <TextBox Text="{Binding CanvasHeightMM}" Width="60" />
+                        <Label Content="mm"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasHeight}" Width="60"/>
+                        <Label Content="px"/>
+                    </StackPanel>                    
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasHeightIN}" Width="60"/>
+                        <Label Content="in"/>
+                    </StackPanel>
+
+                    <Button Content="Drukuj" Margin="15" Height="30" Command="helpers:CommandHandler.Print" Name="PrintButton"/>
+                    
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox  Header="Aktaulny komponent">
+                <StackPanel Margin="5">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Nazwa:" />
+                        <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
+                    <Line Margin="3"></Line>
+                    <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.DeleteComponent" />
+
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
         <GroupBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Header="Zoom">
             <StackPanel Orientation="Horizontal">
                 <Slider x:Name="SliderCanvasZoom" Width="200" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderCanvasZoom_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"/>

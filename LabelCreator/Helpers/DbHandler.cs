@@ -12,6 +12,7 @@ namespace LabelCreator.Helpers
         {
             using (var db = new etykietyEntities())
             {
+                
                 return db.t1.ToList();
             }
         }

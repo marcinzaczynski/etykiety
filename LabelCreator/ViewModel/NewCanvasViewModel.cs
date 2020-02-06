@@ -6,6 +6,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace LabelCreator.ViewModel
@@ -19,9 +20,10 @@ namespace LabelCreator.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private const double dpi = 96;                  // 1 in = 96 pixel 
         private const double inConst = 25.4;            // 1 in = 25.4 mm 
         private const double mmConst = 0.03937007874;   // 1 mm = 0.03937007874 in
+
+        private int dpi = 96;
 
         private double width;
         private double height;
@@ -40,7 +42,14 @@ namespace LabelCreator.ViewModel
 
         public NewCanvasViewModel()
         {
+            try
+            {
+                //DbGroupsList = DbHandler.T1GetGroups();
+            }
+            catch (Exception)
+            {
 
+            }
         }
 
         #region PROPERTIES
@@ -110,13 +119,52 @@ namespace LabelCreator.ViewModel
             get { return selectedPaperSizes; }
             set { selectedPaperSizes = value; OnPropertyChanged("SelectedPaperSizes"); SetCanvasSize(value); }
         }
+        
+        public int DPI
+        {
+            get { return dpi; }
+            set { dpi = value; OnPropertyChanged("DPI");}
+        }
 
         private bool dbGroups;
 
         public bool DbGroups
         {
             get { return dbGroups; }
-            set { dbGroups = value; OnPropertyChanged("DbGroups"); }
+            set 
+            {
+                dbGroups = value; 
+                OnPropertyChanged("DbGroups");
+
+                if(!value)
+                {
+                    SelectedDbGroups = null;
+                }
+            }
+        }
+
+        private List<t1> dbGroupsList;
+
+        public List<t1> DbGroupsList
+        {
+            get { return dbGroupsList; }
+            set { dbGroupsList = value; OnPropertyChanged("DbGroupsList"); }
+        }
+
+        private t1 selectedDbGroups;
+
+        public t1 SelectedDbGroups
+        {
+            get { return selectedDbGroups; }
+            set { selectedDbGroups = value; OnPropertyChanged("SelectedDbGroups"); }
+        }
+
+        private Visibility dbGroupsVisibility;
+
+        public Visibility DbGroupsVisibility
+        {
+            get { return dbGroupsVisibility; }
+            set { dbGroupsVisibility = value; OnPropertyChanged("DbGroupsVisibility"); }
         }
 
 
@@ -127,6 +175,8 @@ namespace LabelCreator.ViewModel
             var printerSettings = PrinterHandler.GetPrinterSettings(SelectedPrinter);
 
             PaperSizes = printerSettings.PaperSizes;
+
+            //DPI = printerSettings.PrinterResolutions.Cast<PrinterResolution>().OrderByDescending(pr => pr.X).First().X;
         }
 
         private void SetCanvasSize(PaperSize paperSize)
@@ -151,7 +201,7 @@ namespace LabelCreator.ViewModel
 
         private double mmToPx(double mmVal)
         {
-            return mmToIn(mmVal) * dpi;
+            return mmVal * dpi / inConst;
         }
 
         private double mmToIn(double mmVal)

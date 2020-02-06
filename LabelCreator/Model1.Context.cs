@@ -18,6 +18,7 @@ namespace LabelCreator
         public etykietyEntities()
             : base("name=etykietyEntities")
         {
+            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 10;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -85,7 +85,7 @@
         <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd" >
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Name="spPrev">
                 <Border BorderThickness="1" BorderBrush="Black">
-                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left" Name="Img"/>
+                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left" Name="Img" Stretch="None" SnapsToDevicePixels="True"/>
                 </Border>
             </StackPanel>
 

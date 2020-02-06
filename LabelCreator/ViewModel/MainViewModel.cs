@@ -1,7 +1,9 @@
-﻿using System;
+﻿using LabelCreator.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +24,13 @@ namespace LabelCreator.ViewModel
 
         #endregion
         // =====================================================================
-        
+
         public MainViewModel()
         {
             LoadControlListTree();
-        }        
+
+            HiedeMargins = true;
+        }
 
         // ========================= FIELDS ====================================
         #region
@@ -51,39 +55,89 @@ namespace LabelCreator.ViewModel
             set { fileName = value; OnPropertyChanged("FileName"); }
         }
 
-        // SZEROKOŚĆ OBSZARU ROBOCZEGO CANVAS
+        // SZEROKOŚĆ OBSZARU ROBOCZEGO CANVAS W PX
         private double canvasWidth;
         public double CanvasWidth
         {
             get { return canvasWidth; }
             set
             {
-                canvasWidth = value;
+                canvasWidth = Math.Round(value);
                 OnPropertyChanged("CanvasWidth");
 
                 // odświeżenie długości i pozycje marginesów
-                OnPropertyChanged("MarginWidth"); 
+                OnPropertyChanged("MarginWidth");
                 MarginDefaultLeft = 0;
-                MarginDefaultRight = value;
+                MarginDefaultRight = canvasWidth;
+
+                //CanvasWidthMM = Math.Round(pxToMm(canvasWidth));
+                //CanvasWidthIN = Math.Round(pxToIn(canvasWidth), 2);
             }
         }
 
-        // WYSOKOŚĆ OBSZARU ROBOCZEGO CANVAS
+        private double canvasWidthMM;
+        public double CanvasWidthMM
+        {
+            get { return canvasWidthMM; }
+            set 
+            { 
+                canvasWidthMM = Math.Round(value);
+                OnPropertyChanged("CanvasWidthMM");
+
+                CanvasWidth = mmToPx(canvasWidthMM);
+                CanvasWidthIN = mmToIn(canvasWidthMM);
+            }
+        }
+
+        private double canvasWidthIN;
+        public double CanvasWidthIN
+        {
+            get { return canvasWidthIN; }
+            set { canvasWidthIN = Math.Round(value, 2); OnPropertyChanged("CanvasWidthIN"); }
+        }
+
+
+        // WYSOKOŚĆ OBSZARU ROBOCZEGO CANVAS W PX
         private double canvasHeight;
         public double CanvasHeight
         {
             get { return canvasHeight; }
             set
             {
-                canvasHeight = value;
+                canvasHeight = Math.Round(value);
                 OnPropertyChanged("CanvasHeight");
 
                 // odświeżenie długości i pozycje marginesów
                 OnPropertyChanged("MarginHeight");
                 MarginDefaultTop = 0;
-                MarginDefaultBottom = value;
+                MarginDefaultBottom = canvasHeight;
+
+                //CanvasHeightMM = Math.Round(pxToMm(canvasHeight));
+                //CanvasHeightIN = Math.Round(pxToIn(canvasHeight));
             }
         }
+
+        private double canvasHeightMM;
+        public double CanvasHeightMM
+        {
+            get { return canvasHeightMM; }
+            set
+            {
+                canvasHeightMM = Math.Round(value);
+                OnPropertyChanged("CanvasHeightMM");
+
+                CanvasHeight = mmToPx(canvasHeightMM);
+                CanvasHeightIN = mmToIn(canvasHeightMM);
+            }
+        }
+
+        private double canvasHeightIN;
+        public double CanvasHeightIN
+        {
+            get { return canvasHeightIN; }
+            set { canvasHeightIN = Math.Round(value,2); OnPropertyChanged("CanvasHeightIN"); }
+        }
+
 
         // DŁUGOŚĆ MARGINESÓW
         // AdditionalMarginLength - marginesy dłuższe niż obszar roboczy
@@ -120,7 +174,7 @@ namespace LabelCreator.ViewModel
         }
 
         // WIDOCZNOŚĆ MARGINESÓW 
-        private Visibility marginVisibility;
+        private Visibility marginVisibility = Visibility.Collapsed;
         public Visibility MarginVisibility
         {
             get { return marginVisibility; }
@@ -173,18 +227,18 @@ namespace LabelCreator.ViewModel
             colntrolList = new ObservableCollection<OwnControl>();
 
             //add Root items
-            ControlList.Add(new OwnControl { ControlName = "Tekst"});
-            ControlList.Add(new OwnControl { ControlName = "Obraz"});
-            ControlList.Add(new OwnControl { ControlName = "Kod kreskowy"});
-                        
+            ControlList.Add(new OwnControl { ControlName = "Tekst" });
+            ControlList.Add(new OwnControl { ControlName = "Obraz" });
+            ControlList.Add(new OwnControl { ControlName = "Kod kreskowy" });
+
             ControlList[0].Childrens = new ObservableCollection<OwnControl>();
             ControlList[1].Childrens = new ObservableCollection<OwnControl>();
             ControlList[2].Childrens = new ObservableCollection<OwnControl>();
-            
+
             //ControlList[0].Childrens.Add(new OwnControl { ControlName = "Test11"});
             //ControlList[1].Childrens.Add(new OwnControl { ControlName = "Test21"});
             //ControlList[2].Childrens.Add(new OwnControl { ControlName = "Test31"});
-            
+
         }
 
         private ObservableCollection<OwnControl> colntrolList;
@@ -198,12 +252,100 @@ namespace LabelCreator.ViewModel
             }
         }
 
+        private List<string> installedPrinters;
+        public List<string> InstalledPrinters
+        {
+            get { return installedPrinters; }
+            set { installedPrinters = value; OnPropertyChanged("InstalledPrinters"); }
+        }
+
+        private string selectedPrinter;
+        public string SelectedPrinter
+        {
+            get { return selectedPrinter; }
+            set { selectedPrinter = value; OnPropertyChanged("SelectedPrinter"); LoadLabels(); }
+        }
+
+        private PrinterSettings.PaperSizeCollection paperSizes;
+        public PrinterSettings.PaperSizeCollection PaperSizes
+        {
+            get { return paperSizes; }
+            set { paperSizes = value; OnPropertyChanged("PaperSizes"); }
+        }
+
+        private int dpi = 96;
+
+        public int DPI
+        {
+            get { return dpi; }
+            set { dpi = value; OnPropertyChanged("DPI"); CanvasWidthMM = CanvasWidthMM; CanvasHeightMM = CanvasHeightMM; }
+        }
+
+
+        private PaperSize selectedPaperSizes;
+        public PaperSize SelectedPaperSizes
+        {
+            get { return selectedPaperSizes; }
+            set { selectedPaperSizes = value; OnPropertyChanged("SelectedPaperSizes"); SetCanvasSize(value); }
+        }
+
         #endregion
         // =====================================================================
+
+        private const double inConst = 25.4;            // 1 in = 25.4 mm 
+        private const double mmConst = 0.03937007874;   // 1 mm = 0.03937007874 in
+
+        private void LoadLabels()
+        {
+            var printerSettings = PrinterHandler.GetPrinterSettings(SelectedPrinter);
+
+            PaperSizes = printerSettings.PaperSizes;
+
+            //DPI = printerSettings.PrinterResolutions.Cast<PrinterResolution>().OrderByDescending(pr => pr.X).First().X;
+        }
+
+        private void SetCanvasSize(PaperSize paperSize)
+        {
+            if (paperSize != null)
+            {
+                FileName = paperSize.PaperName;
+
+                var inW = paperSize.Width / 100.0;
+                var inH = paperSize.Height / 100.0;
+
+                CanvasWidthMM = inToMm(inW);
+                CanvasHeightMM = inToMm(inH);
+            }
+        }
+
+        public double inToMm(double inVal)
+        {
+            return inVal * inConst;
+        }
+
+        public double mmToPx(double mmVal)
+        {
+            return mmVal * DPI / inConst;
+        }
+
+        public double mmToIn(double mmVal)
+        {
+            return mmVal * mmConst;
+        }
+
+        public double pxToIn(double pxVal)
+        {
+            return pxVal / DPI;
+        }
+
+        public double pxToMm(double pxVal)
+        {
+            return inToMm(pxToIn(pxVal));
+        }
     }
 
     public class OwnControl : INotifyPropertyChanged
-    {     
+    {
         public string ControlName { get; set; }
         public ObservableCollection<OwnControl> Childrens { get; set; }
 

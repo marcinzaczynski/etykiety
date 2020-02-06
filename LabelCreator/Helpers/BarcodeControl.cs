@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace LabelCreator.Helpers
 {
@@ -12,7 +13,7 @@ namespace LabelCreator.Helpers
     {
         public BarcodeControl() : base()
         {
-
+            this.SnapsToDevicePixels = true;
         }
 
         //public string CodeName { get; set; }
