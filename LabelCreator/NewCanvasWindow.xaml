@@ -63,8 +63,8 @@
                 <TextBox Width="120" 
                          Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                          Style="{StaticResource DoubleFormat}"/>
-                <Label Content="DPI:"/>
-                <Label Content="{Binding DPI}"/>
+                <!--<Label Content="DPI:"/>-->
+                <!--<Label Content="{Binding DPI}"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="2">

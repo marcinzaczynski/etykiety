@@ -232,7 +232,15 @@ namespace LabelCreator
                 MainVM.FileName = cnw.NewCanvasVM.FileName;
                 MainVM.CanvasHeightMM = cnw.NewCanvasVM.Height;
                 MainVM.CanvasWidthMM = cnw.NewCanvasVM.Width;
+                MainVM.SelectedPrinter = cnw.NewCanvasVM.SelectedPrinter;
+                MainVM.SelectedPaperSizes = cnw.NewCanvasVM.SelectedPaperSizes;
                 //MainVM.DPI = cnw.NewCanvasVM.DPI;
+                
+                // FIX - wybranie papieru z listy 
+                var item = ComboboxPapers.Items.OfType<PaperSize>().FirstOrDefault(x => x.PaperName == cnw.NewCanvasVM.SelectedPaperSizes.PaperName);
+                var index = ComboboxPapers.Items.IndexOf(item);
+                ComboboxPapers.SelectedIndex = index;
+
 
                 MainCanvas.UpdateLayout();
             }
@@ -363,6 +371,7 @@ namespace LabelCreator
 
         private void Command_Print(object sender, ExecutedRoutedEventArgs e)
         {
+            MainVM.MarginVisibility = Visibility.Hidden;
             SliderCanvasZoom.Value = 1;
 
             Canvas root = new Canvas();
@@ -381,49 +390,19 @@ namespace LabelCreator
                 root.Children.Add(deepCopy);
             }
 
-            PrinterHandler.CreateImage(MainCanvas);
-
             PrinterHandler.Print(root, MainVM.SelectedPrinter);
+
             //PrinterHandler.PrintFixed(root, MainVM.SelectedPrinter);
 
 
-            //MainVM.HiedeMargins = true;
+            MainVM.MarginVisibility = Visibility.Visible;
         }
 
-        private void Print(Visual v)
+        private void Command_CanPrint(object sender, CanExecuteRoutedEventArgs e)
         {
-
-            System.Windows.FrameworkElement e = v as System.Windows.FrameworkElement;
-            if (e == null)
-                return;
-
-            PrintDialog pd = new PrintDialog();
-            if (pd.ShowDialog() == true)
+            if(!string.IsNullOrEmpty(MainVM.SelectedPrinter))
             {
-                //store original scale
-                Transform originalScale = e.LayoutTransform;
-                //get selected printer capabilities
-                System.Printing.PrintCapabilities capabilities = pd.PrintQueue.GetPrintCapabilities(pd.PrintTicket);
-
-                //get scale of the print wrt to screen of WPF visual
-                double scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth, capabilities.PageImageableArea.ExtentHeight /
-                               e.ActualHeight);
-
-                //Transform the Visual to scale
-                e.LayoutTransform = new ScaleTransform(scale, scale);
-
-                //get the size of the printer page
-                System.Windows.Size sz = new System.Windows.Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
-
-                //update the layout of the visual to the printer page size.
-                e.Measure(sz);
-                e.Arrange(new System.Windows.Rect(new System.Windows.Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
-
-                //now print the visual to printer to fit on the one page.
-                pd.PrintVisual(v, "My Print");
-
-                //apply the original transform.
-                e.LayoutTransform = originalScale;
+                e.CanExecute = true;
             }
         }
 
@@ -482,9 +461,13 @@ namespace LabelCreator
 
         #endregion
 
+        #region MOVING COMPONENTS ON CANVAS
+
+        // NACIŚNIĘCIE KOMPONENTU I ROZPOCZĘCIE PRZESUNIĘCIA 
         private new void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ShowClickedControlInfo(sender);
+
             //In this event, we get current mouse position on the control to use it in the MouseMove event.
             var currentComponentPosition = e.GetPosition(sender as FrameworkElement);
             FirstXPos = currentComponentPosition.X;
@@ -497,45 +480,7 @@ namespace LabelCreator
             MovingObject = sender;
         }
 
-        private void ShowClickedControlInfo(object sender)
-        {
-            if (sender is FrameworkElement fe)
-            {
-                if (fe.DataContext is NewTextViewModel tvm)
-                {
-                    MainVM.CurrentComponentName = tvm.Name;
-                    SelectControlOnTree(fe.Name, 0);
-                }
-
-                if (fe.DataContext is NewImageViewModel ivm)
-                {
-                    MainVM.CurrentComponentName = ivm.Name;
-                    SelectControlOnTree(fe.Name, 1);
-                }
-
-                if (fe is BarcodeControl bcc)
-                {
-                    MainVM.CurrentComponentName = bcc.Name;
-                    SelectControlOnTree(fe.Name, 2);
-                }
-            }
-        }
-
-        private void SelectControlOnTree(string name, int type)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return;
-            }
-
-            var toSelect = MainVM.ControlList[type].Childrens.Where(r => r.ControlName == name).FirstOrDefault();
-
-            if (toSelect != null)
-            {
-                toSelect.IsSelected = true;
-            }
-        }
-
+        // PRZESUWANIE KOMPONENTU
         private new void MouseMove(object sender, MouseEventArgs e)
         {
             // JEŚLI WCIŚNIĘTY LEWY PRZYCISK MYSZY NA JAKIMŚ KOMPONENCIE
@@ -616,23 +561,64 @@ namespace LabelCreator
             }
         }
 
+        // PUSZCZENIE PRZESUWANEGO KOMPONENTU
+        private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MovingObject = null;
+        }
+        #endregion
+
+        private void ShowClickedControlInfo(object sender)
+        {
+            if (sender is FrameworkElement fe)
+            {
+                if (fe.DataContext is NewTextViewModel tvm)
+                {
+                    MainVM.CurrentComponentName = tvm.Name;
+                    SelectControlOnTree(fe.Name, 0);
+                }
+
+                if (fe.DataContext is NewImageViewModel ivm)
+                {
+                    MainVM.CurrentComponentName = ivm.Name;
+                    SelectControlOnTree(fe.Name, 1);
+                }
+
+                if (fe is BarcodeControl bcc)
+                {
+                    MainVM.CurrentComponentName = bcc.Name;
+                    SelectControlOnTree(fe.Name, 2);
+                }
+            }
+        }
+
+        private void SelectControlOnTree(string name, int type)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
+            var toSelect = MainVM.ControlList[type].Childrens.Where(r => r.ControlName == name).FirstOrDefault();
+
+            if (toSelect != null)
+            {
+                toSelect.IsSelected = true;
+            }
+        }
+
         private FrameworkElement GetCanvasComponentByName(string name)
         {
             //return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.DataContext is NewTextViewModel).ToList().Where(cc => ((NewTextViewModel)cc.DataContext).Name == name).FirstOrDefault();
 
             return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == name).FirstOrDefault();
         }
+        
 
         private List<T> GetCanvasComponents<T>() where T : FrameworkElement
         {
             return MainCanvas.Children.OfType<T>().ToList();
         }
-
-        private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            MovingObject = null;
-        }
-
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -644,8 +630,8 @@ namespace LabelCreator
                 {
                     if (currentComponent is Control cn)
                     {
-                        cn.BorderThickness = new Thickness(2);
-                        cn.BorderBrush = BorderBrush = Brushes.Black;
+                        //cn.BorderThickness = new Thickness(2);
+                        //cn.BorderBrush = BorderBrush = Brushes.Black;
                         return;
                     }
                 }

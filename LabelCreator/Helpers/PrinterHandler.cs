@@ -21,7 +21,6 @@ namespace LabelCreator.Helpers
     public class PrinterHandler
     {
 
-        public static BitmapFrame bf;
 
         public static PrinterSettings GetPrinterSettings(string printerName)
         {
@@ -56,6 +55,9 @@ namespace LabelCreator.Helpers
                 }
             }
         }
+
+
+
 
         public static void Print(Canvas c, string printerName, object o = null)
         {
@@ -258,59 +260,7 @@ namespace LabelCreator.Helpers
 
                 return bitmapImage;
             }
-        }
-
-        private static BitmapFrame VaryQualityLevel(Canvas canvas)
-        {
-            var w = (int)canvas.RenderSize.Width;
-            var h = (int)canvas.RenderSize.Height;
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap(w, h, 203, 203, PixelFormats.Default);
-            rtb.Render(canvas);
-
-            MemoryStream s = new MemoryStream();
-            BitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(rtb));
-            encoder.Save(s);           
-
-            using (MemoryStream stream = new MemoryStream(s.ToArray()))
-            {
-                bf = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-            }
-
-            return bf;
-
-            // Get a bitmap.
-            Bitmap bmp1 = new Bitmap(s);
-            ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            // Create an Encoder object based on the GUID
-            // for the Quality parameter category.
-            System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-
-            // Create an EncoderParameters object.
-            // An EncoderParameters object has an array of EncoderParameter
-            // objects. In this case, there is only one
-            // EncoderParameter object in the array.
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
-            //myEncoderParameters.Param[0] = myEncoderParameter;
-            //bmp1.Save(path, jgpEncoder,
-            //    myEncoderParameters);
-
-            myEncoderParameter = new EncoderParameter(myEncoder, 100L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            bmp1.Save(@"LogoZeroCompresion1.jpg", jgpEncoder,
-                myEncoderParameters);
-
-            //// Save the bitmap as a JPG file with zero quality level compression.
-            //myEncoderParameter = new EncoderParameter(myEncoder, 0L);
-            //myEncoderParameters.Param[0] = myEncoderParameter;
-            //bmp1.Save(@"LogoZeroCompresion2.jpg", jgpEncoder, myEncoderParameters);
-
-
-        }
+        }       
 
         private static ImageCodecInfo GetEncoder(ImageFormat format)
         {

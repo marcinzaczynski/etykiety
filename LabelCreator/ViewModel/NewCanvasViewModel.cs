@@ -42,9 +42,14 @@ namespace LabelCreator.ViewModel
 
         public NewCanvasViewModel()
         {
+            //InitDb();
+        }
+
+        private void InitDb()
+        {
             try
             {
-                //DbGroupsList = DbHandler.T1GetGroups();
+                DbGroupsList = DbHandler.T1GetGroups();
             }
             catch (Exception)
             {
@@ -133,7 +138,8 @@ namespace LabelCreator.ViewModel
             get { return dbGroups; }
             set 
             {
-                dbGroups = value; 
+                dbGroups = value;
+                InitDb();
                 OnPropertyChanged("DbGroups");
 
                 if(!value)

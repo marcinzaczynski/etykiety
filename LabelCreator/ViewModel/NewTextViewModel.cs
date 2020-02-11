@@ -83,7 +83,7 @@ namespace LabelCreator.ViewModel
             set { name = value; OnPropertyChanged("Name"); }
         }        
 
-        private string labelContent;
+        private string labelContent = "TEST_X";
         public string LabelContent
         {
             get { return labelContent; }

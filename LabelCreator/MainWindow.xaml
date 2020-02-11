@@ -58,6 +58,7 @@
 
         <CommandBinding Command="helpers:CommandHandler.Print"
                         Executed="Command_Print"
+                        CanExecute="Command_CanPrint"
                         />
 
         <CommandBinding Command="helpers:CommandHandler.Exit" 
@@ -151,7 +152,7 @@
                         <ScaleTransform x:Name="CanvasScaleTransform" />
                     </Canvas.LayoutTransform>
                     
-                    <Border BorderThickness="1" BorderBrush="Black">
+                    <!--<Border BorderThickness="1" BorderBrush="Black">
                         <Label Content="ASDF"  FontSize="12" Canvas.Top="0" Canvas.Left="0" />
                     </Border>
                     <Border BorderThickness="1" BorderBrush="Black" Canvas.Top="0" Canvas.Right="0" >
@@ -162,7 +163,7 @@
                     </Border>
                     <Border BorderThickness="1" BorderBrush="Black" Canvas.Bottom="0" Canvas.Left="0" >
                         <Label Content="ASDF"  FontSize="12"/>
-                    </Border>
+                    </Border>-->
                     
                     
                     <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
@@ -177,58 +178,6 @@
         </ScrollViewer>
 
         <StackPanel Grid.Row="2" Grid.Column="2">
-
-            <GroupBox Header="Canvas">
-                
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="Drukarka:" Width="65"/>
-                        <ComboBox Width="150" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="Papier:" Width="65"/>
-                        <ComboBox Width="150" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="DPI:" Width="65"/>
-                        <TextBox Text="{Binding DPI}" Width="60"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
-                        <Label Content="Szerokość:" Width="65"/>
-                        <TextBox Text="{Binding CanvasWidthMM}" Width="60"/>
-                        <Label Content="mm"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
-                        <Label Content="" Width="65"/>
-                        <Label Content="{Binding CanvasWidth}" Width="60"/>
-                        <Label Content="px"/>
-                    </StackPanel>                    
-                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
-                        <Label Content="" Width="65"/>
-                        <Label Content="{Binding CanvasWidthIN}" Width="60" />
-                        <Label Content="in"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
-                        <Label Content="Wysokość:" Width="65"/>
-                        <TextBox Text="{Binding CanvasHeightMM}" Width="60" />
-                        <Label Content="mm"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
-                        <Label Content="" Width="65"/>
-                        <Label Content="{Binding CanvasHeight}" Width="60"/>
-                        <Label Content="px"/>
-                    </StackPanel>                    
-                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
-                        <Label Content="" Width="65"/>
-                        <Label Content="{Binding CanvasHeightIN}" Width="60"/>
-                        <Label Content="in"/>
-                    </StackPanel>
-
-                    <Button Content="Drukuj" Margin="15" Height="30" Command="helpers:CommandHandler.Print" Name="PrintButton"/>
-                    
-                </StackPanel>
-            </GroupBox>
-
             <GroupBox  Header="Aktaulny komponent">
                 <StackPanel Margin="5">
                     <StackPanel Orientation="Horizontal" Margin="5">
@@ -241,6 +190,58 @@
 
                 </StackPanel>
             </GroupBox>
+            
+            <GroupBox Header="Canvas">                
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Drukarka:" Width="65"/>
+                        <ComboBox Width="150" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Papier:" Width="65"/>
+                        <ComboBox Width="150" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Name="ComboboxPapers"/>
+                    </StackPanel>
+                    <!--<StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="DPI:" Width="65"/>
+                        <TextBox Text="{Binding DPI}" Width="60"/>
+                    </StackPanel>-->
+                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
+                        <Label Content="Szerokość:" Width="65"/>
+                        <TextBox Text="{Binding CanvasWidthMM}" Width="60"/>
+                        <Label Content="mm"/>
+                    </StackPanel>
+                    <!--<StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasWidth}" Width="60"/>
+                        <Label Content="px"/>
+                    </StackPanel>                    
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasWidthIN}" Width="60" />
+                        <Label Content="in"/>
+                    </StackPanel>-->
+                    <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
+                        <Label Content="Wysokość:" Width="65"/>
+                        <TextBox Text="{Binding CanvasHeightMM}" Width="60" />
+                        <Label Content="mm"/>
+                    </StackPanel>
+                    <!--<StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasHeight}" Width="60"/>
+                        <Label Content="px"/>
+                    </StackPanel>                    
+                    <StackPanel Orientation="Horizontal" Margin="5,1,0,0">
+                        <Label Content="" Width="65"/>
+                        <Label Content="{Binding CanvasHeightIN}" Width="60"/>
+                        <Label Content="in"/>
+                    </StackPanel>-->
+
+                    <Button Content="Drukuj" Margin="15" Height="30" Command="helpers:CommandHandler.Print" Name="PrintButton"/>
+                    
+                </StackPanel>
+            </GroupBox>
+
+            
         </StackPanel>
         <GroupBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Header="Zoom">
             <StackPanel Orientation="Horizontal">

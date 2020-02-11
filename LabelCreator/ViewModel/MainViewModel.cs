@@ -28,8 +28,6 @@ namespace LabelCreator.ViewModel
         public MainViewModel()
         {
             LoadControlListTree();
-
-            HiedeMargins = true;
         }
 
         // ========================= FIELDS ====================================
@@ -174,7 +172,7 @@ namespace LabelCreator.ViewModel
         }
 
         // WIDOCZNOŚĆ MARGINESÓW 
-        private Visibility marginVisibility = Visibility.Collapsed;
+        private Visibility marginVisibility = Visibility.Visible;
         public Visibility MarginVisibility
         {
             get { return marginVisibility; }
@@ -299,7 +297,9 @@ namespace LabelCreator.ViewModel
         {
             var printerSettings = PrinterHandler.GetPrinterSettings(SelectedPrinter);
 
+
             PaperSizes = printerSettings.PaperSizes;
+
 
             //DPI = printerSettings.PrinterResolutions.Cast<PrinterResolution>().OrderByDescending(pr => pr.X).First().X;
         }
@@ -357,6 +357,26 @@ namespace LabelCreator.ViewModel
             set { isSelected = value; OnPropertyChanged("IsSelected"); }
         }
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
+
+    public class OwnPaperSize : INotifyPropertyChanged
+    {
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; OnPropertyChanged("Name"); }
+        }
+
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
