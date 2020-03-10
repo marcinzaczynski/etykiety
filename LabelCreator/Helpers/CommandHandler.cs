@@ -64,6 +64,17 @@ namespace LabelCreator.Helpers
                 }
             );
 
+        public static readonly RoutedUICommand NewDbText = new RoutedUICommand
+            (
+                "Tekst z bazy",
+                "NewDbText",
+                typeof(CommandHandler),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.D4, ModifierKeys.Control)
+                }
+            );
+
         public static readonly RoutedUICommand NewImage = new RoutedUICommand
             (
                 "Obraz",

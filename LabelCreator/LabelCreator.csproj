@@ -146,9 +146,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\DbLabel.cs" />
     <Compile Include="Model\LabelModel.cs" />
     <Compile Include="NewBarcodeWindow.xaml.cs">
       <DependentUpon>NewBarcodeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewDbTextWindow.xaml.cs">
+      <DependentUpon>NewDbTextWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="NewImageWindow.xaml.cs">
       <DependentUpon>NewImageWindow.xaml</DependentUpon>
@@ -177,6 +181,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NewBarcodeViewModel.cs" />
     <Compile Include="ViewModel\NewCanvasViewModel.cs" />
+    <Compile Include="ViewModel\NewDbTextViewModel.cs" />
     <Compile Include="ViewModel\NewImageViewModel.cs" />
     <Compile Include="ViewModel\NewTextViewModel.cs" />
     <Compile Include="wyroby.cs">
@@ -201,6 +206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewCanvasWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewDbTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -268,6 +277,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="piwo.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

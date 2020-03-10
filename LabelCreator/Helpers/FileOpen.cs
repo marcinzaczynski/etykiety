@@ -12,13 +12,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace LabelCreator.Helpers
 {
     public partial class AppHandler
     {
-        private static XNamespace Namespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+        private static XNamespace NamespaceCanvas = "clr-namespace:LabelCreator;assembly=LabelCreator";
+        private static XNamespace ns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
 
         public static LabelModel OpenFile()
         {
@@ -52,8 +55,8 @@ namespace LabelCreator.Helpers
         }
 
         private static LabelModel ParseXml(XDocument doc)
-        {           
-            var canvas = doc.Descendants(Namespace + "Canvas").FirstOrDefault();
+        {
+            var canvas = doc.Descendants(NamespaceCanvas + "CanvasForLabel").FirstOrDefault();
 
             if(canvas != null)
             {
@@ -64,8 +67,13 @@ namespace LabelCreator.Helpers
                     var w = canvas.Attribute("Width").Value;
                     var h = canvas.Attribute("Height").Value;
 
+                    var idGrupa = canvas.Attribute("id_grupa")?.Value;
+                    var idPole = canvas.Attribute("id_pole")?.Value;
+
                     lm.CanvasWidht = Convert.ToDouble(StrToDouble(w));
                     lm.CanvasHeight = Convert.ToDouble(StrToDouble(h));
+
+                    lm.Id_Grupa = Convert.ToInt32(idGrupa);
 
                     GetLabels(canvas, lm.Components);
                     GetImages(canvas, lm.Components);
@@ -89,7 +97,7 @@ namespace LabelCreator.Helpers
             {
                 //Dictionary<UIElement, CanvasPosition> list = new Dictionary<UIElement, CanvasPosition>();
 
-                var labels = canvas.Descendants(Namespace + "Label").ToList();
+                var labels = canvas.Descendants(ns + "Label").ToList();
 
                 foreach (var lbl in labels)
                 {
@@ -98,7 +106,7 @@ namespace LabelCreator.Helpers
 
                     NewTextViewModel newTextViewModel = new NewTextViewModel();
 
-                    var textBlock = lbl.Descendants(Namespace + "TextBlock").FirstOrDefault();
+                    var textBlock = lbl.Descendants(ns + "TextBlock").FirstOrDefault();
 
                     if (textBlock != null)
                     {
@@ -108,6 +116,8 @@ namespace LabelCreator.Helpers
                         var fontWeight = textBlock.Attribute("FontWeight").Value;
                         var fontSize = textBlock.Attribute("FontSize").Value;
                         var fontColor = textBlock.Attribute("Foreground").Value;
+                        var hca = lbl.Attribute("HorizontalContentAlignment")?.Value;
+                        var vca = lbl.Attribute("VerticalContentAlignment")?.Value;
 
                         newTextViewModel.LabelContent = text;
                         newTextViewModel.TbFontFamily = new FontFamily(fontFamily);
@@ -115,6 +125,8 @@ namespace LabelCreator.Helpers
                         newTextViewModel.TbFontWeight = fontWeight == "Bold" ? FontWeights.Bold : FontWeights.Regular;
                         newTextViewModel.TbFontSize = (float)Convert.ToDouble(StrToDouble(fontSize));
                         newTextViewModel.FontColor = new BrushConverter().ConvertFromString(fontColor) as SolidColorBrush;
+                        newTextViewModel.TbHorizontalContentAligment = hca != null? GetHorizontalAligment(hca) : HorizontalAlignment.Left;
+                        newTextViewModel.TbVerticalContentAligment = vca != null ? GetVerticalAligment(vca) : VerticalAlignment.Top;
 
                         // UTWORZENIE OKNA DIALOGOWEGO DO WYBIERANIA CZCIONKI
                         System.Drawing.FontStyle fs1 = System.Drawing.FontStyle.Regular;
@@ -131,7 +143,7 @@ namespace LabelCreator.Helpers
                             fs2 = System.Drawing.FontStyle.Bold;
                         }                        
 
-                        var textDecoration = textBlock.Descendants(Namespace + "TextDecoration").ToList();
+                        var textDecoration = textBlock.Descendants(ns + "TextDecoration").ToList();
 
                         if(textDecoration != null)
                         {
@@ -169,6 +181,7 @@ namespace LabelCreator.Helpers
                     newLabel.Name = name;
                     newTextViewModel.Name = name;                    
 
+                    // POBRANIE WŁAŚCIWOŚCI MARGINESÓW 
                     if (!name.Contains("Margin"))
                     {
                         var borderBrush = lbl.Attribute("BorderBrush").Value;
@@ -183,8 +196,14 @@ namespace LabelCreator.Helpers
                         }
                     }
 
-                    var left = lbl.Attribute("Canvas.Left").Value;
-                    var top = lbl.Attribute("Canvas.Top").Value;
+                    //var width = lbl.Attribute("Width")?.Value;
+                    //var height = lbl.Attribute("Height")?.Value;
+
+                    //newLabel.Width = Convert.ToDouble(StrToDouble(width));
+                    //newLabel.Height = Convert.ToDouble(StrToDouble(height));                    
+
+                    var left = lbl.Attribute(ns + "Canvas.Left").Value;
+                    var top = lbl.Attribute(ns + "Canvas.Top").Value;
 
                     var canvasLeft = Convert.ToDouble(StrToDouble(left));
                     var canvasTop = Convert.ToDouble(StrToDouble(top));
@@ -204,9 +223,40 @@ namespace LabelCreator.Helpers
             }            
         }
         
+        private static HorizontalAlignment GetHorizontalAligment(string val)
+        {
+            var result = Enum.TryParse(val, out HorizontalAlignment aligment);
+            
+            if (result)
+            {
+                return aligment;
+            }
+            else
+            {
+                return HorizontalAlignment.Left;
+            }
+        }
+
+        private static VerticalAlignment GetVerticalAligment(string val)
+        {
+            var result = Enum.TryParse(val, out VerticalAlignment aligment);
+
+            if (result)
+            {
+                return aligment;
+            }
+            else
+            {
+                return VerticalAlignment.Top;
+            }
+        }
+
         private static void GetImages(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
         {
-            var images = canvas.Descendants(Namespace + "Image").ToList();
+            var images = canvas.Descendants(ns + "Image").ToList();
+
+            // poprawić odczyt img z pliku 
+            
 
             foreach (var img in images)
             {
@@ -240,7 +290,7 @@ namespace LabelCreator.Helpers
 
         private static void GetBarcodes(XElement canvas, Dictionary<UIElement, CanvasPosition> list)
         {
-            var codes = canvas.Descendants(Namespace + "BarcodeControl").ToList();
+            var codes = canvas.Descendants(NamespaceCanvas + "BarcodeControl").ToList();
 
             foreach (var code in codes)
             {
@@ -258,8 +308,8 @@ namespace LabelCreator.Helpers
                     bc.Height = Convert.ToDouble(code.Attribute("Height").Value);
                     bc.Cursor = Cursors.Hand;
 
-                    var canvasLeft = Convert.ToDouble(StrToDouble(code.Attribute("Canvas.Left").Value));
-                    var canvasTop = Convert.ToDouble(StrToDouble(code.Attribute("Canvas.Top").Value));
+                    var canvasLeft = Convert.ToDouble(StrToDouble(code.Attribute(ns + "Canvas.Left").Value));
+                    var canvasTop = Convert.ToDouble(StrToDouble(code.Attribute(ns + "Canvas.Top").Value));
 
                     list.Add(bc, new CanvasPosition(canvasLeft, canvasTop));
                 }

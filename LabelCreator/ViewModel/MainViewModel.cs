@@ -228,6 +228,7 @@ namespace LabelCreator.ViewModel
             ControlList.Add(new OwnControl { ControlName = "Tekst" });
             ControlList.Add(new OwnControl { ControlName = "Obraz" });
             ControlList.Add(new OwnControl { ControlName = "Kod kreskowy" });
+            ControlList.Add(new OwnControl { ControlName = "Tekst z bazy" });
 
             ControlList[0].Childrens = new ObservableCollection<OwnControl>();
             ControlList[1].Childrens = new ObservableCollection<OwnControl>();
@@ -286,6 +287,23 @@ namespace LabelCreator.ViewModel
             get { return selectedPaperSizes; }
             set { selectedPaperSizes = value; OnPropertyChanged("SelectedPaperSizes"); SetCanvasSize(value); }
         }
+
+        private int? idGrupa = 1;
+
+        public int? IdGrupa
+        {
+            get { return idGrupa; }
+            set { idGrupa = value; OnPropertyChanged("IdGrupa"); }
+        }
+
+        private int? idPole;
+
+        public int? IdPole
+        {
+            get { return idPole; }
+            set { idPole = value; OnPropertyChanged("IdPole"); }
+        }
+
 
         #endregion
         // =====================================================================

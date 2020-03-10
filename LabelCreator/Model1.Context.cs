@@ -28,7 +28,7 @@ namespace LabelCreator
     
         public virtual DbSet<profile> profile { get; set; }
         public virtual DbSet<t1> t1 { get; set; }
-        public virtual DbSet<t2> t2 { get; set; }
+        public virtual DbSet<t3> t2 { get; set; }
         public virtual DbSet<t3> t3 { get; set; }
         public virtual DbSet<uzytkownicy> uzytkownicy { get; set; }
         public virtual DbSet<wyroby> wyroby { get; set; }

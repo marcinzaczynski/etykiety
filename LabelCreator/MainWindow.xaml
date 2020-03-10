@@ -24,7 +24,7 @@
     </Window.Resources>
 
     <Window.DataContext>
-        <ViewModel:MainViewModel CanvasHeightMM="69" CanvasWidthMM="65" x:Name="MainVM"/>
+        <ViewModel:MainViewModel CanvasHeightMM="69" CanvasWidthMM="69" x:Name="MainVM"/>
     </Window.DataContext>
 
     <Window.CommandBindings>
@@ -33,6 +33,10 @@
 
         <CommandBinding Command="helpers:CommandHandler.NewText" 
                         Executed="Command_NewText"/>
+
+        <CommandBinding Command="helpers:CommandHandler.NewDbText" 
+                        Executed="Command_NewDbText"
+                        CanExecute="Command_CanOpenNewDbText"/>
 
         <CommandBinding Command="helpers:CommandHandler.NewImage" 
                         Executed="Command_NewImage"/>
@@ -98,6 +102,14 @@
                 <Separator/>
                 <MenuItem Header="Zamknij" Command="helpers:CommandHandler.Exit"/>
             </MenuItem>
+            <MenuItem Header="Dodaj">
+                <MenuItem Header="Tekst" Command="helpers:CommandHandler.NewText"/>
+                <MenuItem Header="Tekst z bazy" Command="helpers:CommandHandler.NewDbText"/>
+                <Separator/>
+                <MenuItem Header="Obraz" Command="helpers:CommandHandler.NewImage"/>
+                <Separator/>
+                <MenuItem Header="Kod kreskowy" Command="helpers:CommandHandler.NewBarcode"/>
+            </MenuItem>
             <MenuItem Header="Program">
                 <MenuItem Header="Ukryj marginesy" IsCheckable="True" IsChecked="{Binding HiedeMargins}"/>
             </MenuItem>
@@ -111,6 +123,7 @@
         </ToolBar>
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
+            
             <GroupBox  Header="Komponenty">
                 <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding ControlList}" SelectedItemChanged="TreeView_SelectedItemChanged">
                     <TreeView.ItemContainerStyle>
@@ -146,8 +159,8 @@
 
         <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
             <GroupBox Header="Obszar roboczy" Padding="10" Name="WorkspaceFrame">
-                <!--<helpers:FunkyBorder BorderBrush="Red" PreviewMouseLeftButtonDown="MouseLeftButtonDown" PreviewMouseLeftButtonUp="PreviewMouseLeftButtonUp">-->
-                <Canvas x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
+
+                <local:CanvasForLabel x:Name="MainCanvas"  Height="{Binding CanvasHeight}" Width="{Binding CanvasWidth}" Id_Grupa="{Binding IdGrupa}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="DesigningCanvas_MouseWheel" Background="White" Margin="2" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
                     <Canvas.LayoutTransform>
                         <ScaleTransform x:Name="CanvasScaleTransform" />
                     </Canvas.LayoutTransform>
@@ -170,7 +183,7 @@
                     <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                </Canvas>
+                </local:CanvasForLabel>
                 <!--</helpers:FunkyBorder>-->
 
                 
@@ -237,7 +250,13 @@
                     </StackPanel>-->
 
                     <Button Content="Drukuj" Margin="15" Height="30" Command="helpers:CommandHandler.Print" Name="PrintButton"/>
-                    
+                </StackPanel>
+            </GroupBox>
+            
+            <GroupBox Header="Etykieta z bazy">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="IdGrupa:" Width="65"/>
+                    <Label Content="{Binding IdGrupa}"/>
                 </StackPanel>
             </GroupBox>
 

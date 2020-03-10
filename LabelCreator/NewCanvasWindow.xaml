@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:LabelCreator"
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel" x:Class="LabelCreator.NewCanvasWindow"
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
-        Closed="Window_Closed"
         mc:Ignorable="d"
         Title="NewCanvasWindow" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight">
 

@@ -1,0 +1,72 @@
+﻿<Window x:Class="LabelCreator.NewDbTextWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LabelCreator"
+        xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel"
+        mc:Ignorable="d"
+        xmlns:helpers="clr-namespace:LabelCreator.Helpers"
+        Title="Tekst z bazy" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight">
+
+    <Window.DataContext>
+        <ViewModel:NewDbTextViewModel x:Name="NewDbTextVM"/>
+    </Window.DataContext>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.Ok" 
+                        Executed="CommanOk_Executed" 
+                        CanExecute="CommandOk_CanExecute"/>
+        <CommandBinding Command="helpers:CommandHandler.Cancel" 
+                        Executed="CommanCancel_Executed" 
+                        />
+    </Window.CommandBindings>
+    
+    <Window.Resources>
+        <Style x:Key="ControlButton" TargetType="Button">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.Column="0" Margin="5" Header="Wybierz element">
+            <StackPanel>
+                <Label Content="{Binding Firma}" Margin="5"/>
+                <ListView ItemsSource="{Binding GroupElements}" Margin="5" SelectedItem="{Binding SelectedElem}" Height="185">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID__POLE" Width="60" DisplayMemberBinding="{Binding Path=id_pole}"/>
+                            <GridViewColumn Header="WARTOŚĆ" Width="150" DisplayMemberBinding="{Binding Path=wartosc}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Ok" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsDefault="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(F1)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+            <StackPanel>
+                <Button Style="{StaticResource ControlButton}" Command="helpers:CommandHandler.Cancel" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsCancel="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(Esc)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -77,12 +77,6 @@ namespace LabelCreator
             Close();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-
-        }
-
-
         private void Double_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (sender is TextBox tb)

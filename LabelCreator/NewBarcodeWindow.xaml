@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel"
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
-        Title="NewBarcodeWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+        Title="NewBarcodeWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight" UseLayoutRounding="True">
 
     <Window.DataContext>
         <ViewModel:NewBarcodeViewModel x:Name="NewBarcodeVM"/>
@@ -82,13 +82,16 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd" >
+        <!--<Grid Grid.Row="0" Grid.Column="1" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <Image Source="{Binding BarcodeImage.Source}" RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True"/>
+        </Grid>-->
+
+        <GroupBox Grid.Row="0" Grid.Column="1" Margin="5" Header="Podgląd" UseLayoutRounding="True">
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Name="spPrev">
                 <Border BorderThickness="1" BorderBrush="Black">
-                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left" Name="Img" Stretch="None" SnapsToDevicePixels="True"/>
+                    <Image Source="{Binding ImgSource}" Width="{Binding CodeWidth}" Height="{Binding CodeHeight}" Margin="0" HorizontalAlignment="Left" Name="Img" Stretch="None" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" UseLayoutRounding="True"/>
                 </Border>
-            </StackPanel>
-
+            </StackPanel>            
         </GroupBox>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">

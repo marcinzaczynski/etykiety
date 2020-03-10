@@ -62,9 +62,7 @@ namespace LabelCreator
 
             PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
 
-            SetPrintersList();
-
-            
+            SetPrintersList();            
         }
 
         private void SetPrintersList()
@@ -87,6 +85,21 @@ namespace LabelCreator
             //{
             //    AddComponentToCanvas(newTextWindow.NewText);
             //}
+        }
+
+        private void Command_NewDbText(object sender, ExecutedRoutedEventArgs e)
+        {
+            var newDbTextWindow = new NewDbTextWindow((int)MainVM.IdGrupa);
+
+            newDbTextWindow.ShowDialog();
+        }
+
+        private void Command_CanOpenNewDbText(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if(MainVM.IdGrupa != null)
+            {
+                e.CanExecute = true;
+            }
         }
 
         private void Command_NewImage(object sender, ExecutedRoutedEventArgs e)
@@ -234,7 +247,7 @@ namespace LabelCreator
                 MainVM.CanvasWidthMM = cnw.NewCanvasVM.Width;
                 MainVM.SelectedPrinter = cnw.NewCanvasVM.SelectedPrinter;
                 MainVM.SelectedPaperSizes = cnw.NewCanvasVM.SelectedPaperSizes;
-                //MainVM.DPI = cnw.NewCanvasVM.DPI;
+                MainVM.IdGrupa = cnw.NewCanvasVM.SelectedDbGroups.id_grupa;
                 
                 // FIX - wybranie papieru z listy 
                 var item = ComboboxPapers.Items.OfType<PaperSize>().FirstOrDefault(x => x.PaperName == cnw.NewCanvasVM.SelectedPaperSizes.PaperName);
@@ -258,6 +271,8 @@ namespace LabelCreator
 
                 MainVM.CanvasHeightMM = MainVM.pxToMm(output.CanvasHeight);
                 MainVM.CanvasWidthMM = MainVM.pxToMm(output.CanvasWidht);
+
+                MainVM.IdGrupa = output.Id_Grupa;
 
                 foreach (var component in output.Components)
                 {
@@ -613,7 +628,6 @@ namespace LabelCreator
 
             return MainCanvas.Children.Cast<FrameworkElement>().Where(c => c.Name == name).FirstOrDefault();
         }
-        
 
         private List<T> GetCanvasComponents<T>() where T : FrameworkElement
         {

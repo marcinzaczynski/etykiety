@@ -17,6 +17,9 @@ namespace LabelCreator.Helpers
 
         public double CanvasWidht { get; set; }
         public double CanvasHeight { get; set; }
+
+        public int? Id_Grupa { get; set; }
+
         public Dictionary<UIElement, CanvasPosition> Components { get; set; }
 
     }

@@ -3,9 +3,14 @@ using OwnBarcode;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZXing;
@@ -178,6 +183,15 @@ namespace LabelCreator.ViewModel
             set { textHint = value; OnPropertyChanged("TextHint"); }
         }
 
+        //private Image barcodeImage;
+
+        //public Image BarcodeImage
+        //{
+        //    get { return barcodeImage; }
+        //    set { barcodeImage = value; OnPropertyChanged("BarcodeImage"); }
+        //}
+
+
         //BarcodeFormat
         public IEnumerable<TYPE> CodeFormatList { get; set; } = Enum.GetValues(typeof(TYPE)).Cast<TYPE>();        
 
@@ -203,9 +217,26 @@ namespace LabelCreator.ViewModel
                 {
                     if (!string.IsNullOrWhiteSpace(CodeText))
                     {
+                        // QR
                         //ImgSource = BarcodeHandler.GenerateCode(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode, CodeMargin);
 
+                        // BARCODE
                         ImgSource = BarcodeHandler.GenerateBarcode(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode);
+
+                        //var i = new Image();
+                        //System.Drawing.Bitmap bmp = (System.Drawing.Bitmap)BarcodeHandler.GetBarcodeImage(SelectedCodeFormat, CodeText, CodeWidth, CodeHeight, PureCode);
+                        //var bi = new BitmapImage();
+                        //using (var ms = new MemoryStream())
+                        //{
+                        //    bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Tiff);
+                        //    ms.Position = 0;                            
+                        //    bi.BeginInit();
+                        //    bi.CacheOption = BitmapCacheOption.OnLoad;
+                        //    bi.StreamSource = ms;
+                        //    bi.EndInit();
+                        //}
+                        //i.Source = bi;
+                        //BarcodeImage = i;  
                     }
                     else
                     {
