@@ -202,8 +202,6 @@ namespace LabelCreator.ViewModel
             }
         }
 
-
-
         // PRZESUNIĘCIE MARGINESÓW POZA CANVAS
         private double marginOffsetSize = MarginOffsetSizeField;
         public double MarginOffsetSize
@@ -233,11 +231,7 @@ namespace LabelCreator.ViewModel
             ControlList[0].Childrens = new ObservableCollection<OwnControl>();
             ControlList[1].Childrens = new ObservableCollection<OwnControl>();
             ControlList[2].Childrens = new ObservableCollection<OwnControl>();
-
-            //ControlList[0].Childrens.Add(new OwnControl { ControlName = "Test11"});
-            //ControlList[1].Childrens.Add(new OwnControl { ControlName = "Test21"});
-            //ControlList[2].Childrens.Add(new OwnControl { ControlName = "Test31"});
-
+            ControlList[3].Childrens = new ObservableCollection<OwnControl>();
         }
 
         private ObservableCollection<OwnControl> colntrolList;
@@ -288,7 +282,7 @@ namespace LabelCreator.ViewModel
             set { selectedPaperSizes = value; OnPropertyChanged("SelectedPaperSizes"); SetCanvasSize(value); }
         }
 
-        private int? idGrupa = 1;
+        private int? idGrupa;
 
         public int? IdGrupa
         {

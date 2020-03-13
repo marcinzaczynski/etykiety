@@ -9,10 +9,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using ZXing;
-using ZXing.Common;
-using ZXing.QrCode.Internal;
-using ZXing.Rendering;
 
 namespace LabelCreator.Helpers
 {
@@ -42,45 +38,45 @@ namespace LabelCreator.Helpers
             }
         }
 
-        public static BitmapImage GenerateCode(BarcodeFormat codeFormat, string codeText, int width, int height, bool pureCode, int margin = 6)
-        {
-            var barcodeWriter = new BarcodeWriter
-            {
-                Renderer = new BitmapRenderer(),
-                Format = codeFormat,
-                Options = new EncodingOptions
-                {
-                    Height = height,
-                    Width = width,
-                    Margin = margin,
-                    PureBarcode = pureCode,
-                }
-            };
+        //public static BitmapImage GenerateCode(BarcodeFormat codeFormat, string codeText, int width, int height, bool pureCode, int margin = 6)
+        //{
+        //    var barcodeWriter = new BarcodeWriter
+        //    {
+        //        Renderer = new BitmapRenderer(),
+        //        Format = codeFormat,
+        //        Options = new EncodingOptions
+        //        {
+        //            Height = height,
+        //            Width = width,
+        //            Margin = margin,
+        //            PureBarcode = pureCode,
+        //        }
+        //    };
 
-            barcodeWriter.Options.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            barcodeWriter.Options.Hints.Add(EncodeHintType.CHARACTER_SET, "utf-8");
-            //barcodeWriter.Options.Hints.Add(EncodeHintType.MARGIN, 0);
+        //    barcodeWriter.Options.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        //    barcodeWriter.Options.Hints.Add(EncodeHintType.CHARACTER_SET, "utf-8");
+        //    //barcodeWriter.Options.Hints.Add(EncodeHintType.MARGIN, 0);
 
-            return GetBitmap(barcodeWriter, codeText);
-        }
+        //    return GetBitmap(barcodeWriter, codeText);
+        //}
 
-        private static BitmapImage GetBitmap(BarcodeWriter barcodeWriter, string value)
-        {
-            using (var bitmap = barcodeWriter.Write(value))
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, ImageFormat.Png);
+        //private static BitmapImage GetBitmap(BarcodeWriter barcodeWriter, string value)
+        //{
+        //    using (var bitmap = barcodeWriter.Write(value))
+        //    using (var stream = new MemoryStream())
+        //    {
+        //        bitmap.Save(stream, ImageFormat.Png);
 
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                stream.Seek(0, SeekOrigin.Begin);
-                bi.StreamSource = stream;
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.EndInit();
+        //        BitmapImage bi = new BitmapImage();
+        //        bi.BeginInit();
+        //        stream.Seek(0, SeekOrigin.Begin);
+        //        bi.StreamSource = stream;
+        //        bi.CacheOption = BitmapCacheOption.OnLoad;
+        //        bi.EndInit();
 
-                return bi;
-            };
-        }
+        //        return bi;
+        //    };
+        //}
 
 
         public static BitmapImage GenerateBarcode(TYPE codeType, string codeText, double width, double height, bool pureCode)

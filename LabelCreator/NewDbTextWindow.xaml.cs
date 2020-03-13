@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LabelCreator.Model;
+using LabelCreator.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,17 +21,50 @@ namespace LabelCreator
     /// </summary>
     public partial class NewDbTextWindow : Window
     {
+        public static event AddNewComponent NewDbTextEvent;
+                
+        public bool WindowResult = false;
+
+        private int idGrupaTmp;
+
         public NewDbTextWindow(int idGrupa)
         {
             InitializeComponent();
 
-            NewDbTextVM.IdGrupa = idGrupa;
+            idGrupaTmp = idGrupa;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            NewDbTextVM.Firma = "Ładowanie danych...";
+            Mouse.OverrideCursor = Cursors.Wait;
+            Task.Run(() =>
+            {
+                NewDbTextVM.IdGrupa = idGrupaTmp;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Mouse.OverrideCursor = null;
+                });
+            });
         }
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            var DbText = new DbTextModel();
+            var DbTextContent = new TextBlock();
+            var Dc = new NewTextViewModel();
 
+            DbTextContent.Text = Dc.LabelContent = NewDbTextVM.SelectedElem.wartosc;
+            DbText.Name = Dc.Name = "ASDF12345";
+            DbText.Width = Dc.LabelContent.Count() * 8;
+            DbText.Height = 30;
+            DbText.Id_Pole = NewDbTextVM.SelectedElem.id_pole;
+            DbText.Content = DbTextContent;
+            DbText.DataContext = Dc;
 
+            NewDbTextEvent?.Invoke(DbText, 5, 5);
+
+            WindowResult = true;
             Close();
         }
 

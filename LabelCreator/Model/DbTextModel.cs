@@ -8,9 +8,9 @@ using System.Windows.Controls;
 
 namespace LabelCreator.Model
 {
-    public class DbLabel : Label
+    public class DbTextModel : Label
     {
-        public static readonly DependencyProperty IdPoleProperty= DependencyProperty.Register("Id_Pole", typeof(int?), typeof(DbLabel));
+        public static readonly DependencyProperty IdPoleProperty = DependencyProperty.Register("Id_Pole", typeof(int?), typeof(DbTextModel));
 
         public int? Id_Pole
         {
@@ -18,9 +18,10 @@ namespace LabelCreator.Model
             set { SetValue(IdPoleProperty, value); }
         }
 
-        public DbLabel() : base ()
+        public DbTextModel() : base()
         {
 
         }
+
     }
 }

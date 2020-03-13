@@ -76,7 +76,7 @@
             <!--Menu Plik-->
             <RowDefinition Height="auto"/>
             <!--Pasek Toolbox-->
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="0"/>
             <!--Kontent-->
             <RowDefinition Height="*"/>
             <!--Canvas zoom-->
@@ -115,12 +115,11 @@
             </MenuItem>
         </Menu>
 
-        <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" Background="#FFF3F3F3">
+        <!--<ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" Background="#FFF3F3F3">
             <Button Height="20" Command="helpers:CommandHandler.NewText" Content="Tekst"/>
             <Button Height="20" Command="helpers:CommandHandler.NewImage" Content="Obraz"/>
             <Button Height="20" Command="helpers:CommandHandler.NewBarcode" Content="Kod kreskowy"/>
-            <!--<Button Height="20" Click="ButtonMarginesy_Click" Content="Marginesy"/>-->
-        </ToolBar>
+        </ToolBar>-->
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
             
@@ -178,32 +177,16 @@
                         <Label Content="ASDF"  FontSize="12"/>
                     </Border>-->
                     
-                    
                     <Label Name="MarginT" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultTop, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     <Label Name="MarginB" Style="{StaticResource MarginStyle}" Cursor="SizeNS" Width="{Binding MarginWidth}" Height="2" Canvas.Left="{Binding MarginOffsetSize}" Canvas.Top="{Binding MarginDefaultBottom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginL" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultLeft, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <Label Name="MarginR" Style="{StaticResource MarginStyle}" Cursor="SizeWE" Width="2" Height="{Binding MarginHeight}" Canvas.Top="{Binding MarginOffsetSize}" Canvas.Left="{Binding MarginDefaultRight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </local:CanvasForLabel>
                 <!--</helpers:FunkyBorder>-->
-
-                
             </GroupBox>
         </ScrollViewer>
 
         <StackPanel Grid.Row="2" Grid.Column="2">
-            <GroupBox  Header="Aktaulny komponent">
-                <StackPanel Margin="5">
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="Nazwa:" />
-                        <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
-                    <Line Margin="3"></Line>
-                    <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.DeleteComponent" />
-
-                </StackPanel>
-            </GroupBox>
-            
             <GroupBox Header="Canvas">                
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
@@ -253,13 +236,25 @@
                 </StackPanel>
             </GroupBox>
             
-            <GroupBox Header="Etykieta z bazy">
+            <GroupBox  Header="Aktaulny komponent">
+                <StackPanel Margin="5">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Nazwa:" />
+                        <TextBlock Text="{Binding CurrentComponentName}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Height="30" Content="Edytuj (Ctrl+E)" Command="helpers:CommandHandler.EditComponent" />
+                    <Line Margin="3"></Line>
+                    <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.DeleteComponent" />
+
+                </StackPanel>
+            </GroupBox>
+            
+            <!--<GroupBox Header="Etykieta z bazy">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="IdGrupa:" Width="65"/>
                     <Label Content="{Binding IdGrupa}"/>
                 </StackPanel>
-            </GroupBox>
-
+            </GroupBox>-->
             
         </StackPanel>
         <GroupBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Header="Zoom">

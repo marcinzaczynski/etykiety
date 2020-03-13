@@ -7,7 +7,7 @@
         xmlns:ViewModel="clr-namespace:LabelCreator.ViewModel"
         mc:Ignorable="d"
         xmlns:helpers="clr-namespace:LabelCreator.Helpers"
-        Title="Tekst z bazy" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight">
+        Title="Tekst z bazy" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
 
     <Window.DataContext>
         <ViewModel:NewDbTextViewModel x:Name="NewDbTextVM"/>

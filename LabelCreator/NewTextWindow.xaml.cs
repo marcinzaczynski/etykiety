@@ -17,6 +17,7 @@ using LabelCreator.Helpers;
 using LabelCreator.ViewModel;
 using Binding = System.Windows.Data.Binding;
 using MessageBox = System.Windows.MessageBox;
+using LabelCreator.Model;
 
 namespace LabelCreator
 {
@@ -28,7 +29,7 @@ namespace LabelCreator
         public static event AddNewComponent NewTextEvent;
         public static event EditComponent EditTextEvent;
 
-        public Label NewText;
+        public OwnTextModel NewText;
         public TextBlock NewTextBlock;
 
         FontDialog fontDialog = new FontDialog();
@@ -48,7 +49,7 @@ namespace LabelCreator
                 fontDialog = dc.FontDialog;
             }
 
-            NewText = new Label();
+            NewText = new OwnTextModel();
             NewTextBlock = new TextBlock();
             NewText.Content = NewTextBlock;
 

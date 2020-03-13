@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LabelCreator.Helpers;
+using LabelCreator.Model;
 using LabelCreator.ViewModel;
 
 namespace LabelCreator
@@ -37,12 +38,10 @@ namespace LabelCreator
         double FirstXPos, FirstYPos;
 
         // współrzędne kursora myszki
-        double FirstArrowXPos, FirstArrowYPos;
+        //double FirstArrowXPos, FirstArrowYPos;
 
         // Przeciągany element na Canvasie
         object MovingObject;
-
-        PrintDialog dlg = new PrintDialog();
 
         public MainWindow()
         {
@@ -50,6 +49,8 @@ namespace LabelCreator
 
             NewTextWindow.NewTextEvent += new AddNewComponent(AddComponentToCanvas);
             NewTextWindow.EditTextEvent += new EditComponent(EditComponent);
+
+            NewDbTextWindow.NewDbTextEvent += new AddNewComponent(AddComponentToCanvas);
 
             NewImageWindow.NewImageEvent += new AddNewComponent(AddComponentToCanvas);
             NewImageWindow.EditImageEvent += new EditComponent(EditComponent);
@@ -92,6 +93,11 @@ namespace LabelCreator
             var newDbTextWindow = new NewDbTextWindow((int)MainVM.IdGrupa);
 
             newDbTextWindow.ShowDialog();
+
+            if(newDbTextWindow.WindowResult)
+            {
+
+            }
         }
 
         private void Command_CanOpenNewDbText(object sender, CanExecuteRoutedEventArgs e)
@@ -111,7 +117,6 @@ namespace LabelCreator
 
         private void Command_NewBarcode(object sender, ExecutedRoutedEventArgs e)
         {
-            
             var newBarcodeWindow = new NewBarcodeWindow();
 
             newBarcodeWindow.ShowDialog();
@@ -127,22 +132,22 @@ namespace LabelCreator
             {
                 if (control is Label lbl)
                 {
-                    MainVM.ControlList[0].Childrens.Add(new OwnControl { ControlName = lbl.Name });
-                    //MainVM.TreeComponentsList[0].Children.Add(new TreeComponents() { Header = lbl.Name });
-
-                    //TreeViewItemTextsRoot.Items.Add(lbl.Name);
+                    if(lbl is OwnTextModel)
+                    {
+                        MainVM.ControlList[0].Childrens.Add(new OwnControl { ControlName = lbl.Name });
+                    }
+                    else
+                    {
+                        MainVM.ControlList[3].Childrens.Add(new OwnControl { ControlName = lbl.Name });
+                    }
                 }
                 else if (control is BarcodeControl bcc)
                 {
                     MainVM.ControlList[2].Childrens.Add(new OwnControl { ControlName = bcc.Name });
-                    //TreeViewItemBarcodeRoot.Items.Add(bcc.Name);
-                    //TreeViewItemBarcodeRoot.IsExpanded = true;
                 }
                 else if (control is Image img)
                 {
                     MainVM.ControlList[1].Childrens.Add(new OwnControl { ControlName = img.Name });
-                    //TreeViewItemImageFromFileRoot.Items.Add(img.Name);
-                    //TreeViewItemImageFromFileRoot.IsExpanded = true;
                 }
             }
 
@@ -160,10 +165,6 @@ namespace LabelCreator
 
         private void EditComponent(FrameworkElement control)
         {
-            //if (control.DataContext is NewTextViewModel vm)
-            //{
-            //}
-
             var componentToEdit = GetCanvasComponentByName(control.Name);
 
             if (componentToEdit != null)
@@ -195,41 +196,13 @@ namespace LabelCreator
                 }
             }
 
-            MainVM.ControlList[0].Childrens.Clear();
-            MainVM.ControlList[1].Childrens.Clear();
-            MainVM.ControlList[2].Childrens.Clear();
+            for (int i = 0; i < MainVM.ControlList.Count; i++)
+            {
+                MainVM.ControlList[i].Childrens.Clear();
+            }
+
             ComponentList.Clear();
         }
-
-        private void ButtonMarginesy_Click(object sender, RoutedEventArgs e)
-        {
-            var x = MainCanvas.ActualWidth;
-            var y = MainCanvas.ActualHeight;
-
-            //var marginTop = AppHandler.DrawMargin(x + 10);
-            //var marginTop = new Label();
-            //marginTop.Width = x + 10;
-            //marginTop.Height = 1;
-            //marginTop.BorderBrush = new SolidColorBrush(Colors.Red);
-            //marginTop.BorderThickness = new Thickness(2);
-            //marginTop.Name = "MarginTop";
-            //DesigningCanvas.Children.Add(marginTop);
-            //Canvas.SetLeft(marginTop, -5);
-            //Canvas.SetTop(marginTop, 5);
-            //marginTop.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
-            //marginTop.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
-            //marginTop.Cursor = Cursors.SizeNS;
-
-            //var marginBottom = AppHandler.DrawMargin(x + 10);
-            //marginBottom.Name = "MarginBottom";
-            //DesigningCanvas.Children.Add(marginBottom);
-            //Canvas.SetLeft(marginBottom, -5);
-            //Canvas.SetTop(marginBottom, y-5);
-            //marginBottom.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
-            //marginBottom.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
-            //marginBottom.Cursor = Cursors.SizeNS;
-        }
-
         #region COMMAND
 
         private void Command_NewCanvas(object sender, ExecutedRoutedEventArgs e)
@@ -358,10 +331,14 @@ namespace LabelCreator
 
                 ComponentList.Remove(currentComponent);
                 MainCanvas.Children.Remove(currentComponent);
-
-                if (currentComponent is Label lbl)
-                {
+                
+                if (currentComponent is OwnTextModel lbl)
+                {                    
                     MainVM.ControlList[0].Childrens.Remove(MainVM.ControlList[0].Childrens.Where(r => r.ControlName == lbl.Name).FirstOrDefault());
+                }
+                else if(currentComponent is DbTextModel dbText)
+                {
+                    MainVM.ControlList[3].Childrens.Remove(MainVM.ControlList[3].Childrens.Where(r => r.ControlName == dbText.Name).FirstOrDefault());
                 }
                 else if (currentComponent is BarcodeControl bcc)
                 {
@@ -593,7 +570,7 @@ namespace LabelCreator
                     SelectControlOnTree(fe.Name, 0);
                 }
 
-                if (fe.DataContext is NewImageViewModel ivm)
+                if (fe is Image ivm)
                 {
                     MainVM.CurrentComponentName = ivm.Name;
                     SelectControlOnTree(fe.Name, 1);
@@ -603,6 +580,12 @@ namespace LabelCreator
                 {
                     MainVM.CurrentComponentName = bcc.Name;
                     SelectControlOnTree(fe.Name, 2);
+                }
+
+                if(fe is DbTextModel)
+                {
+                    MainVM.CurrentComponentName = fe.Name;
+                    SelectControlOnTree(fe.Name, 3);
                 }
             }
         }

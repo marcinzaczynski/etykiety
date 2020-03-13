@@ -21,19 +21,6 @@ namespace LabelCreator.Helpers
 {
     public partial class AppHandler
     {
-        //public static Rectangle DrawMargin(double width)
-        //{
-        //    Rectangle rect = new Rectangle();
-
-        //    rect.Stroke = new SolidColorBrush(Colors.Red);
-        //    rect.StrokeThickness = 1;
-        //    rect.Fill = new SolidColorBrush(Colors.Red);
-        //    rect.Width = width;
-        //    rect.Height = 2;
-
-        //    return rect;
-        //}
-
         public static void BindData(Label NewText, TextBlock NewTextBlock)
         {
             Binding l1 = new Binding("BorderColor");

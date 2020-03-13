@@ -38,7 +38,7 @@ namespace LabelCreator
 
         private void CommanOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NewBarcodeVM.SaveCodeToFile();
+            //NewBarcodeVM.SaveCodeToFile();
 
             if(EditMode)
             {
