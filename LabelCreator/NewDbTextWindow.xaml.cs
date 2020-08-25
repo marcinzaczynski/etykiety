@@ -54,8 +54,10 @@ namespace LabelCreator
             var DbTextContent = new TextBlock();
             var Dc = new NewTextViewModel();
 
+            var fixName = DateTime.Now.ToString("yyyyMMddHHmmss");
+
             DbTextContent.Text = Dc.LabelContent = NewDbTextVM.SelectedElem.wartosc;
-            DbText.Name = Dc.Name = "ASDF12345";
+            DbText.Name = Dc.Name = $"DBT_{fixName}";
             DbText.Width = Dc.LabelContent.Count() * 8;
             DbText.Height = 30;
             DbText.Id_Pole = NewDbTextVM.SelectedElem.id_pole;
