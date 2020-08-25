@@ -52,7 +52,7 @@
                 <Label Content="Wybierz drukarkę:"/>
                 <ComboBox Margin="5" ItemsSource="{Binding InstalledPrinters}" SelectedItem="{Binding SelectedPrinter}" MaxDropDownHeight="auto"/>
                 <Label Content="Wybierz papier:"/>
-                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName" SelectedItem="{Binding SelectedPaperSizes}" Height="200"/>   
+                <ListBox Margin="5" ItemsSource="{Binding PaperSizes}" DisplayMemberPath="PaperName;Width" SelectedItem="{Binding SelectedPaperSizes}" Height="200"/>   
             </StackPanel>
         </GroupBox>
 
